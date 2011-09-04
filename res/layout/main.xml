@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:layout_width="match_parent">
+    <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/tableLayout1">
+        <TextView android:text="@string/app_name" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView1"></TextView>
+        <Button android:layout_height="wrap_content" android:text="@string/regninger" android:layout_width="wrap_content" android:id="@+id/regninger_button"></Button>
+        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/button_slett_regning" android:id="@+id/slett_regning_button"></Button>
+    </TableLayout>
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, mainActivity!</string>
+    <string name="app_name">Delregning</string>
+    <string name="username">Brukernavn:</string>
+    <string name="password">Passord:</string>
+    <string name="brukernavn"></string>
+    <string name="passord"></string>
+    <string name="button_login">Logg Inn</string>
+    <string name="regninger">Regninger</string>
+    <string name="button_slett_regning">Slett Regning</string>
+</resources>

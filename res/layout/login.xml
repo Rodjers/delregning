@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:layout_width="match_parent">
+    <TextView android:layout_height="wrap_content" android:layout_width="match_parent" android:text="Welcome to ShareIt" android:id="@+id/Welcome"></TextView>
+    <TextView android:text="@string/username" android:layout_width="match_parent" android:id="@+id/textView1" android:layout_height="wrap_content"></TextView>
+    <EditText android:id="@+id/username" android:text="@string/brukernavn" android:layout_width="match_parent" android:layout_height="wrap_content"></EditText>
+    <TextView android:text="@string/password" android:layout_width="wrap_content" android:id="@+id/textView2" android:layout_height="wrap_content"></TextView>
+    <EditText android:id="@+id/password" android:text="@string/passord" android:layout_height="wrap_content" android:layout_width="match_parent" android:password="true"></EditText>
+    <Button android:layout_height="wrap_content" android:text="@string/button_login" android:layout_width="wrap_content" android:id="@+id/login_button"></Button>
+</LinearLayout>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="fill_parent"
+    android:layout_width="match_parent">
+    <TextView	android:layout_alignParentTop="true"
+     			android:text="TextView" 
+     			android:id="@+id/title" 
+     			android:layout_height="wrap_content" 
+     			android:layout_width="wrap_content"
+     			android:textStyle="bold"
+     			android:textSize="20sp">
+    </TextView>
+    <TextView 	android:layout_below="@+id/title" 
+    			android:text="TextView" 
+    			android:layout_height="wrap_content" 
+    			android:layout_width="wrap_content" 
+    			android:layout_alignLeft="@+id/title" 
+    			android:id="@+id/paid_by">
+   	</TextView>
+    <TextView 	android:layout_below="@+id/paid_by" 
+    			android:text="TextView" 
+    			android:layout_height="wrap_content" 
+    			android:layout_width="wrap_content" 
+    			android:layout_alignLeft="@+id/paid_by" 
+    			android:id="@+id/split_between">
+    </TextView>
+    <TextView 	android:layout_toRightOf="@+id/split_between" 
+    			android:text="TextView" 
+    			android:layout_height="wrap_content" 
+    			android:layout_width="fill_parent"
+    			android:gravity="right"
+    			android:layout_alignTop="@+id/split_between" 
+    			android:layout_alignBottom="@+id/split_between" 
+    			android:id="@+id/date">
+    </TextView>
+    <TextView	android:layout_toRightOf="@+id/title"
+    			android:text="TextView"
+    			android:gravity="right"
+    			android:layout_height="wrap_content"
+    			android:layout_width="fill_parent"
+    			android:layout_alignTop="@+id/title"
+    			android:layout_alignBottom="@+id/title" 
+    			android:id="@+id/amount"
+    			android:textSize="20sp">
+    </TextView>
+    
+</RelativeLayout>
