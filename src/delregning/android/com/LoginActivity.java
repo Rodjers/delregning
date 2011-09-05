@@ -30,7 +30,6 @@ public class LoginActivity extends Activity {
         login_button = (Button)findViewById(R.id.login_button);
         login_button.setOnClickListener(loginListener);
         
-
     }
     
     private OnClickListener loginListener = new OnClickListener(){
@@ -67,7 +66,7 @@ public class LoginActivity extends Activity {
     		
     		connection = new DelregningConnection(username, password);
     		
-			connection.deleteBill("C8r");
+			connection.deleteBill("9nZ");
     		
     		
     		setContentView(R.layout.main);

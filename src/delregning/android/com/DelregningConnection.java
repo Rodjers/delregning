@@ -69,8 +69,10 @@ public class DelregningConnection {
 	}
 	
 	public void deleteBill(String slug){
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/remove/");
-		httppost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),0));
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/delete/");
+		httppost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
+		httppost.setHeader("Accept", "application/json");
+		httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 		try{
 			HttpResponse response = httpClient.execute(httppost);
 			HttpEntity entity = response.getEntity();

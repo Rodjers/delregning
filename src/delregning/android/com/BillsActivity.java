@@ -27,7 +27,6 @@ public class BillsActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-		//setContentView(android.R.layout.two_line_list_item);
 		
 		
 		Bundle bundle = getIntent().getExtras();
