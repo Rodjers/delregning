@@ -9,4 +9,5 @@
     <string name="button_login">Logg Inn</string>
     <string name="regninger">Regninger</string>
     <string name="button_slett_regning">Slett Regning</string>
+    <string name="menu_delete_bill">Delete Bill</string>
 </resources>

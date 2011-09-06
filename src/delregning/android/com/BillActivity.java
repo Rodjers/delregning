@@ -8,7 +8,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.SimpleAdapter;
 
 public class BillActivity extends ListActivity {
@@ -35,7 +39,28 @@ public class BillActivity extends ListActivity {
 		
 		
 		
-	} 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.bill_menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	    case R.id.delete:
+	        connection.deleteBill(slug);
+	        goBack();
+	        return true;
+
+	    default:
+	        return super.onOptionsItemSelected(item);
+	    }
+	}
 	
 	private void presentExpenses(String tSlug){
 		try{
@@ -73,5 +98,12 @@ public class BillActivity extends ListActivity {
 		catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void goBack(){
+		Intent billIntent = new Intent(BillActivity.this, BillsActivity.class);
+		billIntent.putExtra("username", username);
+		billIntent.putExtra("password", password);
+		startActivity(billIntent);
 	}
 }
