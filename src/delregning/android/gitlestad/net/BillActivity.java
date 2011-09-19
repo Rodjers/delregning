@@ -1,4 +1,4 @@
-package delregning.android.com;
+package delregning.android.gitlestad.net;
 
 
 import java.util.ArrayList;
@@ -7,8 +7,9 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import delregning.android.gitlestad.net.R;
+
 import android.app.ListActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ public class BillActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.bill);
 		
 		Bundle bundle = getIntent().getExtras();
 		
@@ -35,6 +37,7 @@ public class BillActivity extends ListActivity {
 		
 		connection = new DelregningConnection(username, password);
 		presentExpenses(slug);
+
 
 		
 		
@@ -53,8 +56,9 @@ public class BillActivity extends ListActivity {
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case R.id.delete:
-	        connection.deleteBill(slug);
-	        goBack();
+	    //TODO Implement deleteBill(String slug) correctly   
+	    // connection.deleteBill(slug);
+	        finish();
 	        return true;
 
 	    default:
@@ -88,7 +92,7 @@ public class BillActivity extends ListActivity {
     			list.add(item);
     		}
     		
-    		this.setListAdapter(new SimpleAdapter(
+    		setListAdapter(new SimpleAdapter(
 														this, 
 														list,
 														R.layout.expense,
@@ -98,12 +102,5 @@ public class BillActivity extends ListActivity {
 		catch (Exception e){
 			e.printStackTrace();
 		}
-	}
-	
-	public void goBack(){
-		Intent billIntent = new Intent(BillActivity.this, BillsActivity.class);
-		billIntent.putExtra("username", username);
-		billIntent.putExtra("password", password);
-		startActivity(billIntent);
 	}
 }

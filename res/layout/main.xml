@@ -3,9 +3,8 @@
     android:orientation="vertical"
     android:layout_height="fill_parent"
     android:layout_width="match_parent">
-    <TableLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/tableLayout1">
-        <TextView android:text="@string/app_name" android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/textView1"></TextView>
-        <Button android:layout_height="wrap_content" android:text="@string/regninger" android:layout_width="wrap_content" android:id="@+id/regninger_button"></Button>
-        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="@string/button_slett_regning" android:id="@+id/slett_regning_button"></Button>
-    </TableLayout>
+    
+    <include layout="@layout/header" android:id="@+id/linearLayout1_ref"  android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <Button android:id="@+id/bills_button" android:layout_height="wrap_content" android:text="@string/button_bills" android:layout_width="match_parent"></Button>
+    <Button android:id="@+id/add_bill_button" android:layout_height="wrap_content" android:text="@string/button_add_bill" android:layout_width="match_parent"></Button>
 </LinearLayout>

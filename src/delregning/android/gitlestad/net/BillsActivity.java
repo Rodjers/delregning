@@ -1,4 +1,4 @@
-package delregning.android.com;
+package delregning.android.gitlestad.net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class BillsActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-		
+        setContentView(R.layout.bill);
 		
 		Bundle bundle = getIntent().getExtras();
 		username = bundle.getString("username");
