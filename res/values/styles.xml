@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 	<resources>
-		<style name="delregningTheme">
+		<style name="defaultTheme">
 			<item name="android:textColor">#000</item>
 			<item name="android:background">#fff</item>
 			<item name="android:fitsSystemWindows">false</item>
+			<item name="android:windowNoTitle">true</item>
+		</style>
+		<style name="dialogTheme" parent="android:Theme.Dialog">
+			<item name="android:textColor">#000</item>
+			<item name="android:background">#00000000</item>
+			<item name="android:fitsSystemWindows">true</item>
+			<item name="android:windowNoTitle">true</item>
 		</style>	
 	</resources>

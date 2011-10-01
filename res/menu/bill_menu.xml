@@ -2,5 +2,5 @@
 <menu
   xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="@string/menu_delete_bill" android:menuCategory="system" android:visible="true" android:id="@+id/delete"></item>
-    
+    <item android:title="@string/new_participant" android:menuCategory="system" android:visible="true" android:id="@+id/new_participant"></item>   
 </menu>

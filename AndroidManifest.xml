@@ -8,16 +8,21 @@
     <application 
     	android:icon="@drawable/icon" 
     	android:label="@string/app_name"
-   		android:theme="@style/delregningTheme">
+   		android:theme="@style/defaultTheme">
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BillsActivity" />
+        <activity android:name=".BillsActivity"/>
         <activity android:name=".BillActivity"/>
-        <activity android:name=".MainMenuActivity"/>
+        <activity android:name=".MainMenuActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>        
         <activity android:name=".AddBillActivity"/>
 
     </application>

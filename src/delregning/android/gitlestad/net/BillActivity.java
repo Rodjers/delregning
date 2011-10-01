@@ -9,11 +9,17 @@ import org.json.JSONObject;
 
 import delregning.android.gitlestad.net.R;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
 public class BillActivity extends ListActivity {
@@ -23,6 +29,7 @@ public class BillActivity extends ListActivity {
 	private String slug;
 	private DelregningConnection connection;
 	private JSONObject bill;
+	private AlertDialog.Builder addParticipantDialogBuilder;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -38,7 +45,7 @@ public class BillActivity extends ListActivity {
 		connection = new DelregningConnection(username, password);
 		presentExpenses(slug);
 
-
+		createNewParticipantDialog();
 		
 		
 		
@@ -56,14 +63,35 @@ public class BillActivity extends ListActivity {
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	    case R.id.delete:
-	    //TODO Implement deleteBill(String slug) correctly   
-	    // connection.deleteBill(slug);
+	    	connection.deleteBill(slug);
 	        finish();
 	        return true;
+	    case R.id.new_participant:
+	    	addParticipantDialogBuilder.show();
+	        return true;
+	        
 
 	    default:
 	        return super.onOptionsItemSelected(item);
 	    }
+	}
+	
+	private void createNewParticipantDialog(){
+		addParticipantDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
+		addParticipantDialogBuilder.setTitle(R.string.new_participant);
+		View dialogView = LayoutInflater.from(this).inflate(R.layout.add_participant_dialog, (ViewGroup) findViewById(R.id.add_participant_layout));
+		addParticipantDialogBuilder.setView(dialogView);
+		addParticipantDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				//TODO Create add participant code
+				createNewParticipantDialog();
+			  }
+		});
+		addParticipantDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+			  public void onClick(DialogInterface dialog, int whichButton) {
+				  createNewParticipantDialog();
+			  }
+		});	
 	}
 	
 	private void presentExpenses(String tSlug){
