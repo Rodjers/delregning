@@ -22,4 +22,9 @@
     <string name="cancel">Avbryt</string>
     <string name="new_bill">Ny Regning</string>
     <string name="new_participant">Ny Deltaker</string>
+    <string name="new_payment">Ny Betaling</string>
+    <string name="split_between">Delt mellom: </string>
+    <string name="paid_by">Betalt av: </string>
+    <string name="paid_to">Batealt til: </string>
+    <string name="amount">Beløp: </string>
 </resources>

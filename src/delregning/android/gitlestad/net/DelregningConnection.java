@@ -34,9 +34,9 @@ public class DelregningConnection {
 		httpClient = new DefaultHttpClient();
 		username = brukernavn;
 		password = passord;
-		
+
 	}
-	
+
 	public JSONArray getBills(){
 		try{
 			HttpGet httpget = new HttpGet("http://delregning.no/bills/all/");
@@ -47,7 +47,7 @@ public class DelregningConnection {
 			InputStream stream = entity.getContent();
 			JSONObject billObject = new JSONObject(convertStreamToString(stream));
 			JSONArray bills = billObject.getJSONArray("bills");
-			
+
 			return bills;
 		}
 		catch (Exception e){
@@ -57,24 +57,24 @@ public class DelregningConnection {
 	}
 
 	public JSONObject getBill(String slug){
-		
+
 		try{
-		HttpGet httpget = new HttpGet("http://delregning.no/bills/" + slug + "/");
-		httpget.setHeader("Accept", "application/json");
-		httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
-		HttpResponse response = httpClient.execute(httpget);
-		HttpEntity entity = response.getEntity();
-		InputStream stream = entity.getContent();
-		JSONObject bill = new JSONObject(convertStreamToString(stream));
-		return bill;
+			HttpGet httpget = new HttpGet("http://delregning.no/bills/" + slug + "/");
+			httpget.setHeader("Accept", "application/json");
+			httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
+			HttpResponse response = httpClient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			InputStream stream = entity.getContent();
+			JSONObject bill = new JSONObject(convertStreamToString(stream));
+			return bill;
 		}
 		catch (Exception e){
 			e.printStackTrace();
 		}
 		return null;
-		
+
 	}
-	
+
 	public void deleteBill(String slug){
 		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/delete/");
 		httppost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
@@ -91,28 +91,28 @@ public class DelregningConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addBill(String title, String description){
 
 		HttpPost httppost = new HttpPost("http://delregning.no/bills/add/");
 		List<NameValuePair> urlData = new ArrayList<NameValuePair>(2);  
 		urlData.add(new BasicNameValuePair("title", title));  
 		urlData.add(new BasicNameValuePair("description", description));  
-		
 
-		
+
+
 		HttpProtocolParams.setUseExpectContinue(httpClient.getParams(), false);
 
-			try {
-				httppost.setEntity(new UrlEncodedFormEntity(urlData, "UTF-8"));
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-			}
-		
-		
+		try {
+			httppost.setEntity(new UrlEncodedFormEntity(urlData, "UTF-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+
+
 		httppost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
 		//httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-		
+
 		try{
 			HttpResponse response = httpClient.execute(httppost);
 			HttpEntity entity = response.getEntity();
@@ -124,7 +124,7 @@ public class DelregningConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static String convertStreamToString(InputStream is) {
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
