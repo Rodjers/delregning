@@ -94,7 +94,7 @@ public class DelregningConnection {
 
 	public void addBill(String title, String description){
 
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/add/");
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/create/");
 		List<NameValuePair> urlData = new ArrayList<NameValuePair>(2);  
 		urlData.add(new BasicNameValuePair("title", title));  
 		urlData.add(new BasicNameValuePair("description", description));  
@@ -111,7 +111,8 @@ public class DelregningConnection {
 
 
 		httppost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
-		//httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		httppost.setHeader("Accept", "application/json");
+		httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
 		try{
 			HttpResponse response = httpClient.execute(httppost);

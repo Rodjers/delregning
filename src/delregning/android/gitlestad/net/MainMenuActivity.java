@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
+//import android.widget.TextView;
 
 public class MainMenuActivity extends Activity {
 
@@ -21,6 +23,7 @@ public class MainMenuActivity extends Activity {
 	private Button addBillButton;
 	static final int ADD_BILL_DIALOG = 1;
 	private AlertDialog.Builder addBillDialogBuilder;
+	private DelregningConnection connection;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -35,7 +38,7 @@ public class MainMenuActivity extends Activity {
 		billsButton.setOnClickListener(billsListener);
 		addBillButton = (Button)findViewById(R.id.add_bill_button);
 		addBillButton.setOnClickListener(addBillListener);
-
+		connection = new DelregningConnection(username, password);
 		createDialog();
 
 	}
@@ -43,12 +46,18 @@ public class MainMenuActivity extends Activity {
 	private void createDialog(){
 		addBillDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
 		addBillDialogBuilder.setTitle(R.string.new_bill);
-		View dialogView = LayoutInflater.from(this).inflate(R.layout.add_bill_dialog, (ViewGroup) findViewById(R.id.add_bill_dialog_id));
+		final View dialogView = LayoutInflater.from(this).inflate(R.layout.add_bill_dialog, (ViewGroup) findViewById(R.id.add_bill_dialog_id));
 		addBillDialogBuilder.setInverseBackgroundForced(false);
 		addBillDialogBuilder.setView(dialogView);
 		addBillDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int whichButton) {
-				//TODO Create add bill code
+			public void onClick(DialogInterface dialog, int whichButton) {	
+				
+				String title =((EditText) dialogView.findViewById(R.id.edit_title)).getText().toString();
+				String description = ((EditText) dialogView.findViewById(R.id.edit_description)).getText().toString();
+				
+				
+				
+				connection.addBill(title, description);
 				createDialog();
 			}
 		});
