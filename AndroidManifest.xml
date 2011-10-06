@@ -16,13 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".BillsActivity"/>
-        <activity android:name=".BillActivity"/>
-        <activity android:name=".MainMenuActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>        
+        <activity android:name=".BillActivity"/>      
         <activity android:name=".AddBillActivity"/>
 
     </application>

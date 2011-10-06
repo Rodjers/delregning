@@ -21,7 +21,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class BillActivity extends ListActivity {
 
@@ -86,7 +89,7 @@ public class BillActivity extends ListActivity {
 		case ADD_PARTICIPANT_DIALOG:
 			addParticipantDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
 			addParticipantDialogBuilder.setTitle(R.string.new_participant);
-			View addParticipantDialogView = LayoutInflater.from(this).inflate(R.layout.add_participant_dialog, (ViewGroup) findViewById(R.id.add_participant_layout));
+			final View addParticipantDialogView = LayoutInflater.from(this).inflate(R.layout.add_participant_dialog, (ViewGroup) findViewById(R.id.add_participant_layout));
 			addParticipantDialogBuilder.setView(addParticipantDialogView);
 			addParticipantDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
@@ -154,7 +157,23 @@ public class BillActivity extends ListActivity {
 				item.put("split_between", splitString);
 				list.add(item);
 			}
+			
+			if (list.isEmpty()){
+			HashMap<String,String> lastItem = new HashMap<String,String>();
+			lastItem.put("title", (String) getResources().getText(R.string.no_expenses));
+			lastItem.put("paid_by", (String) getResources().getText(R.string.click_new_expense));
+			list.add(lastItem);
 
+			final ListView lv = getListView();
+			lv.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+						//showDialog(ADD_EXPENSE_DIALOG);
+
+					}
+				});
+			}
+			
 			setListAdapter(new SimpleAdapter(
 					this, 
 					list,

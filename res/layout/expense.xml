@@ -34,7 +34,7 @@
     			android:id="@+id/split_between">
     </TextView>
     <TextView 	android:layout_toRightOf="@+id/split_between" 
-    			android:text="TextView" 
+    			android:text="" 
     			android:layout_height="wrap_content" 
     			android:layout_width="fill_parent"
     			android:gravity="right"

@@ -39,7 +39,7 @@ public class LoginActivity extends Activity {
 			username = editUsername.getText().toString();
 			password = editPassword.getText().toString();
 
-			Intent billsIntent = new Intent(LoginActivity.this, MainMenuActivity.class);
+			Intent billsIntent = new Intent(LoginActivity.this, BillsActivity.class);
 			billsIntent.putExtra("username", username);
 			billsIntent.putExtra("password", password);
 			startActivity(billsIntent);

@@ -5,8 +5,8 @@
     
     <string name="button_login">Logg Inn</string>
     <string name="button_bills">Vis Regninger</string>
-    <string name="menu_delete_bill">Delete Bill</string>
-    <string name="button_add_bill">Legg til regning</string>
+    <string name="delete_bill">Slett Regning</string>
+    <string name="add_bill">Legg til regning</string>
     <string name="password">Passord:</string>
     <string name="edit_username"></string>
     <string name="edit_password"></string>
@@ -27,4 +27,8 @@
     <string name="paid_by">Betalt av: </string>
     <string name="paid_to">Batealt til: </string>
     <string name="amount">Beløp: </string>
+    <string name="click_add_bill">Klikk for å legge til en ny regning</string>
+    <string name="new_expense">Ny utgift</string>
+    <string name="click_new_expense">Klikk for å legge til ny utgift</string>
+    <string name="no_expenses">Ingen utgifter</string>
 </resources>

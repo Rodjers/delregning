@@ -91,6 +91,34 @@ public class DelregningConnection {
 			e.printStackTrace();
 		}
 	}
+	
+	public void updateBill(String slug, String title, String description, int notification, int reminder_interval, String background){
+		//TODO write updateBill()
+	}
+	
+	public void registerParticipant(String name, String email, int payment_info){
+		//TODO write registerParticipant()
+	}
+	
+	public void addParticipant(String slug, int participant, boolean send_invitation){
+		//TODO write addParticipant()
+	}
+	
+	public void removeParticipant(int participant){
+		//TODO write removeParticipant()
+	}
+	
+	public void addExpense(String slug, String description, int amount, int paid_by, int[] split_between){
+		//TODO write addExpense()
+	}
+	
+	public void removeExpense(String slug, int expense){
+		//TODO write removeExpense()
+	}
+	
+	public void addPayment(String slug, int amount, int paid_by, int paid_to){
+		//TODO write addPayment()
+	}
 
 	public void addBill(String title, String description){
 
