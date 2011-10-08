@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -92,66 +93,125 @@ public class DelregningConnection {
 		}
 	}
 	
-	public void updateBill(String slug, String title, String description, int notification, int reminder_interval, String background){
-		//TODO write updateBill()
+	public JSONObject updateBill(String slug, String title, String description, String notification, String reminder_interval, String background){
+		
+		HttpPost httppost = new HttpPost("http://delregning.no/bills" + slug + "/update/");
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		urldata.add(new BasicNameValuePair("title", title));
+		urldata.add(new BasicNameValuePair("description", description));
+		urldata.add(new BasicNameValuePair("notification", notification)); 
+		urldata.add(new BasicNameValuePair("reminder_interval", reminder_interval)); 
+		urldata.add(new BasicNameValuePair("background", background)); 
+		
+		return postData(httppost, urldata);
 	}
 	
-	public void registerParticipant(String name, String email, int payment_info){
-		//TODO write registerParticipant()
+	public JSONObject registerParticipant(String name, String email, String payment_info){
+		
+		HttpPost httppost = new HttpPost("http://delregning.no/participants/add/");
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		urldata.add(new BasicNameValuePair("name", name));
+		urldata.add(new BasicNameValuePair("email", email));
+		urldata.add(new BasicNameValuePair("payment_info", payment_info)); 
+		
+		return postData(httppost, urldata);
 	}
 	
-	public void addParticipant(String slug, int participant, boolean send_invitation){
-		//TODO write addParticipant()
+	public JSONObject addParticipant(String slug, String participant, boolean send_invitation){
+		
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/participants/add/");
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		urldata.add(new BasicNameValuePair("participant", participant));
+		urldata.add(new BasicNameValuePair("send_invitation", Boolean.toString(send_invitation))); 
+		
+		return postData(httppost, urldata);
 	}
 	
-	public void removeParticipant(int participant){
-		//TODO write removeParticipant()
+	public JSONObject removeParticipant(String slug, String participant){
+		
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/participants/remove/");
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		urldata.add(new BasicNameValuePair("participant", participant));  
+		
+		return postData(httppost, urldata);
 	}
 	
-	public void addExpense(String slug, String description, int amount, int paid_by, int[] split_between){
-		//TODO write addExpense()
+	public JSONObject addExpense(String slug, String description, String amount, String paid_by, String[] split_between){
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/expenses/add/");
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		urldata.add(new BasicNameValuePair("amount", amount));  
+		urldata.add(new BasicNameValuePair("paid_by", paid_by));
+		
+		for(int i = 0; i < Arrays.asList(split_between).size(); i++){
+		urldata.add(new BasicNameValuePair("split_between", split_between[i]));
+		}
+		
+		return postData(httppost, urldata);
 	}
 	
-	public void removeExpense(String slug, int expense){
-		//TODO write removeExpense()
+	public JSONObject removeExpense(String slug, String expense){
+		
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/expense/" + expense + "/remove/");
+		
+		return postData(httppost, null);
 	}
 	
-	public void addPayment(String slug, int amount, int paid_by, int paid_to){
-		//TODO write addPayment()
+	public JSONObject addPayment(String slug, String amount, String paid_by, String paid_to){
+		
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/create/");
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		urldata.add(new BasicNameValuePair("amount", amount));  
+		urldata.add(new BasicNameValuePair("paid_by", paid_by));
+		urldata.add(new BasicNameValuePair("paid_by", paid_to));
+		
+		return postData(httppost, urldata);
+	}
+	
+	public JSONObject removePayment(String slug, int payment_id){
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/payments/" + payment_id + "/remove/");
+		
+		return postData(httppost, null);
 	}
 
-	public void addBill(String title, String description){
+	public JSONObject addBill(String title, String description){
 
 		HttpPost httppost = new HttpPost("http://delregning.no/bills/create/");
-		List<NameValuePair> urlData = new ArrayList<NameValuePair>(2);  
-		urlData.add(new BasicNameValuePair("title", title));  
-		urlData.add(new BasicNameValuePair("description", description));  
-
-
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		urldata.add(new BasicNameValuePair("title", title));  
+		urldata.add(new BasicNameValuePair("description", description));
+		
+		return postData(httppost, urldata);
+	}
+		
+	private JSONObject postData(HttpPost httpPost, List<NameValuePair> urlData){
 
 		HttpProtocolParams.setUseExpectContinue(httpClient.getParams(), false);
+		JSONObject bill = null;
 
 		try {
-			httppost.setEntity(new UrlEncodedFormEntity(urlData, "UTF-8"));
+			if (urlData != null){
+			httpPost.setEntity(new UrlEncodedFormEntity(urlData, "UTF-8"));
+			}
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
 
 
-		httppost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
-		httppost.setHeader("Accept", "application/json");
-		httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		httpPost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
+		httpPost.setHeader("Accept", "application/json");
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
 		try{
-			HttpResponse response = httpClient.execute(httppost);
+			HttpResponse response = httpClient.execute(httpPost);
 			HttpEntity entity = response.getEntity();
 			InputStream stream = entity.getContent();
-			String temp = convertStreamToString(stream);
-			System.err.print(temp);
+			bill = new JSONObject(convertStreamToString(stream));
 		}
 		catch (Exception e){
 			e.printStackTrace();
 		}
+		
+		return bill;
 	}
 
 	private static String convertStreamToString(InputStream is) {

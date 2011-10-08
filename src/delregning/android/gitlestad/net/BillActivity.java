@@ -93,7 +93,7 @@ public class BillActivity extends ListActivity {
 			addParticipantDialogBuilder.setView(addParticipantDialogView);
 			addParticipantDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					//TODO Create add participant code
+					//TODO Write add participant code
 
 				}
 			});
@@ -112,7 +112,7 @@ public class BillActivity extends ListActivity {
 			newPaymentDialogBuilder.setView(newPaymentDialogView);
 			newPaymentDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					//TODO Create add participant code
+					//TODO Write add participant code
 
 				}
 			});
@@ -168,7 +168,7 @@ public class BillActivity extends ListActivity {
 			lv.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-						//showDialog(ADD_EXPENSE_DIALOG);
+						//TODO Add show expense dialog
 
 					}
 				});
