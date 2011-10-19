@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import delregning.android.gitlestad.net.R;
@@ -21,7 +22,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.Checkable;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
@@ -35,9 +40,13 @@ public class BillActivity extends ListActivity {
 	private JSONObject bill;
 	private AlertDialog.Builder addParticipantDialogBuilder;
 	private AlertDialog.Builder newPaymentDialogBuilder;
-	private static final int ADD_PARTICIPANT_DIALOG = 1;
+	private static final int NEW_PARTICIPANT_DIALOG = 1;
 	private static final int NEW_PAYMENT_DIALOG = 2;
+	private static final int ADD_PARTICIPANT_DIALOG = 3;
+	private ArrayList<JSONObject> mParticipants;
 
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -48,6 +57,8 @@ public class BillActivity extends ListActivity {
 		username = bundle.getString("username");
 		password = bundle.getString("password");
 		slug = bundle.getString("slug");
+
+		mParticipants = (ArrayList<JSONObject>)bundle.get("participants");
 
 		connection = new DelregningConnection(username, password);
 		presentExpenses(slug);
@@ -71,7 +82,7 @@ public class BillActivity extends ListActivity {
 			finish();
 			return true;
 		case R.id.button_new_participant:
-			showDialog(ADD_PARTICIPANT_DIALOG);
+			showDialog(NEW_PARTICIPANT_DIALOG);
 			return true;
 		case R.id.button_new_payment:
 			showDialog(NEW_PAYMENT_DIALOG);
@@ -80,20 +91,28 @@ public class BillActivity extends ListActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id){
 
 		Dialog dialog;
 		switch(id){
-		case ADD_PARTICIPANT_DIALOG:
+		case NEW_PARTICIPANT_DIALOG:
 			addParticipantDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
 			addParticipantDialogBuilder.setTitle(R.string.new_participant);
-			final View addParticipantDialogView = LayoutInflater.from(this).inflate(R.layout.add_participant_dialog, (ViewGroup) findViewById(R.id.add_participant_layout));
-			addParticipantDialogBuilder.setView(addParticipantDialogView);
+			final View newParticipantDialogView = LayoutInflater.from(this).inflate(R.layout.new_participant_dialog, (ViewGroup) findViewById(R.id.new_participant_layout));
+			addParticipantDialogBuilder.setView(newParticipantDialogView);
+			Button addExistingButton = (Button)newParticipantDialogView.findViewById(R.id.button_add_existing);
+			addExistingButton.setOnClickListener(this.addExistingListener);
 			addParticipantDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					//TODO Write add participant code
+						String mName = ((EditText) newParticipantDialogView.findViewById(R.id.edit_name)).getText().toString();
+						String mEmail = ((EditText) newParticipantDialogView.findViewById(R.id.edit_email)).getText().toString();
+						if(mName != null && mEmail != null){
+							connection.registerParticipant(slug, mName, mEmail);
+							//connection.addParticipant(slug, participant.getInt("id"), ((Checkable) newParticipantDialogView.findViewById(R.id.checkbox_send_invitation)).isChecked());
+						}
+					
 
 				}
 			});
@@ -108,11 +127,12 @@ public class BillActivity extends ListActivity {
 		case NEW_PAYMENT_DIALOG:
 			newPaymentDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
 			newPaymentDialogBuilder.setTitle(R.string.new_payment);
-			View newPaymentDialogView = LayoutInflater.from(this).inflate(R.layout.new_payment_dialog, (ViewGroup) findViewById(R.id.new_payment_layout));
+			final View newPaymentDialogView = LayoutInflater.from(this).inflate(R.layout.new_payment_dialog, (ViewGroup) findViewById(R.id.new_payment_layout));
 			newPaymentDialogBuilder.setView(newPaymentDialogView);
 			newPaymentDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					//TODO Write add participant code
+
+
 
 				}
 			});
@@ -121,7 +141,7 @@ public class BillActivity extends ListActivity {
 
 				}
 			});	
-			
+
 			dialog = (Dialog)newPaymentDialogBuilder.show();
 			break;
 		default:
@@ -130,6 +150,15 @@ public class BillActivity extends ListActivity {
 		}
 		return dialog;
 	}
+	
+	private OnClickListener addExistingListener = new OnClickListener(){
+		public void onClick(View v){
+			dismissDialog(NEW_PARTICIPANT_DIALOG);
+			showDialog(ADD_PARTICIPANT_DIALOG);
+
+		}
+	};
+
 
 
 	private void presentExpenses(String tSlug){
@@ -157,23 +186,23 @@ public class BillActivity extends ListActivity {
 				item.put("split_between", splitString);
 				list.add(item);
 			}
-			
-			if (list.isEmpty()){
-			HashMap<String,String> lastItem = new HashMap<String,String>();
-			lastItem.put("title", (String) getResources().getText(R.string.no_expenses));
-			lastItem.put("paid_by", (String) getResources().getText(R.string.click_new_expense));
-			list.add(lastItem);
 
-			final ListView lv = getListView();
-			lv.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			if (list.isEmpty()){
+				HashMap<String,String> lastItem = new HashMap<String,String>();
+				lastItem.put("title", (String) getResources().getText(R.string.no_expenses));
+				lastItem.put("paid_by", (String) getResources().getText(R.string.click_new_expense));
+				list.add(lastItem);
+
+				final ListView lv = getListView();
+				lv.setOnItemClickListener(new OnItemClickListener() {
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 						//TODO Add show expense dialog
 
 					}
 				});
 			}
-			
+
 			setListAdapter(new SimpleAdapter(
 					this, 
 					list,

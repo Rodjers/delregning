@@ -31,4 +31,6 @@
     <string name="new_expense">Ny utgift</string>
     <string name="click_new_expense">Klikk for å legge til ny utgift</string>
     <string name="no_expenses">Ingen utgifter</string>
+    <string name="add_existing_participant">Legg til en eksisterende deltaker</string>
+    <string name="send_invitation">Send invitasjon på mail</string>
 </resources>

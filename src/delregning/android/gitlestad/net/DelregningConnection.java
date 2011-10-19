@@ -106,32 +106,32 @@ public class DelregningConnection {
 		return postData(httppost, urldata);
 	}
 	
-	public JSONObject registerParticipant(String name, String email, String payment_info){
+	public JSONObject registerParticipant(String slug, String name, String email){
 		
-		HttpPost httppost = new HttpPost("http://delregning.no/participants/add/");
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "participants/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("name", name));
 		urldata.add(new BasicNameValuePair("email", email));
-		urldata.add(new BasicNameValuePair("payment_info", payment_info)); 
+		urldata.add(new BasicNameValuePair("payment_info", "")); 
 		
 		return postData(httppost, urldata);
 	}
 	
-	public JSONObject addParticipant(String slug, String participant, boolean send_invitation){
+	public JSONObject addParticipant(String slug, int participant, boolean send_invitation){
 		
 		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/participants/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
-		urldata.add(new BasicNameValuePair("participant", participant));
+		urldata.add(new BasicNameValuePair("participant", Integer.toString(participant)));
 		urldata.add(new BasicNameValuePair("send_invitation", Boolean.toString(send_invitation))); 
 		
 		return postData(httppost, urldata);
 	}
 	
-	public JSONObject removeParticipant(String slug, String participant){
+	public JSONObject removeParticipant(String slug, int participant){
 		
 		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/participants/remove/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
-		urldata.add(new BasicNameValuePair("participant", participant));  
+		urldata.add(new BasicNameValuePair("participant", Integer.toString(participant)));  
 		
 		return postData(httppost, urldata);
 	}
@@ -175,7 +175,7 @@ public class DelregningConnection {
 
 	public JSONObject addBill(String title, String description){
 
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/create/");
+		HttpPost httppost = new HttpPost("http://delregning.no/bills/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("title", title));  
 		urldata.add(new BasicNameValuePair("description", description));

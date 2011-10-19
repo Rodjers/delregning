@@ -35,6 +35,8 @@ public class BillsActivity extends ListActivity {
 	private DelregningConnection connection;
 	private final static int ADD_BILL_DIALOG = 1;
 	private AlertDialog.Builder addBillDialogBuilder;
+	private JSONArray mBills;
+	private ArrayList<JSONObject> mParticipants;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState){
@@ -46,15 +48,21 @@ public class BillsActivity extends ListActivity {
 		password = bundle.getString("password");
 
 		connection = new DelregningConnection(username, password);
+		mBills = connection.getBills();
 
-
-		presentBills();
+		presentBills(mBills);
+		try {
+			mParticipants = getParticipants(mBills);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-		presentBills();
+		mBills = connection.getBills();
+		presentBills(mBills);
 	}
 	
 	@Override
@@ -90,7 +98,7 @@ public class BillsActivity extends ListActivity {
 				public void onClick(DialogInterface dialog, int whichButton) {	
 					connection.addBill(((EditText) dialogView.findViewById(R.id.edit_title)).getText().toString(),
 									   ((EditText) dialogView.findViewById(R.id.edit_description)).getText().toString());
-					presentBills();
+					presentBills(mBills);
 				}
 			});
 			addBillDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -108,8 +116,7 @@ public class BillsActivity extends ListActivity {
 		return dialog;
 	}
 
-	private void presentBills(){
-		JSONArray bills = connection.getBills();
+	private void presentBills(JSONArray bills){
 
 		ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
 
@@ -154,9 +161,27 @@ public class BillsActivity extends ListActivity {
 				billIntent.putExtra("slug", item.get("slug"));
 				billIntent.putExtra("username", username);
 				billIntent.putExtra("password", password);
+				billIntent.putExtra("participants", mParticipants);
 				startActivity(billIntent);
 				}
 			}
 		});
+	}
+	
+	private ArrayList<JSONObject> getParticipants(JSONArray bills) throws JSONException{
+		
+		ArrayList<JSONObject> participantList = new ArrayList<JSONObject>();
+		
+		for (int i = 0; i < bills.length(); i++){
+			JSONArray participants = bills.getJSONObject(i).getJSONArray("participants");
+			for (int j = 0; i < participants.length(); j++){
+				JSONObject participant = participants.getJSONObject(j);
+				if (!participantList.contains(participant)){
+				participantList.add(participant);
+				}
+			}
+		}
+		
+		return participantList;
 	}
 }
