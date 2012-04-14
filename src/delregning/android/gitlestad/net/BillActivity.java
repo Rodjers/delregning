@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
-import org.json.JSONException;
+//import org.json.JSONException;
 import org.json.JSONObject;
 
 import delregning.android.gitlestad.net.R;
@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Checkable;
+//import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -43,10 +43,10 @@ public class BillActivity extends ListActivity {
 	private static final int NEW_PARTICIPANT_DIALOG = 1;
 	private static final int NEW_PAYMENT_DIALOG = 2;
 	private static final int ADD_PARTICIPANT_DIALOG = 3;
-	private ArrayList<JSONObject> mParticipants;
+//	private ArrayList<JSONObject> mParticipants;
 
 
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -58,7 +58,7 @@ public class BillActivity extends ListActivity {
 		password = bundle.getString("password");
 		slug = bundle.getString("slug");
 
-		mParticipants = (ArrayList<JSONObject>)bundle.get("participants");
+//		mParticipants = (ArrayList<JSONObject>)bundle.get("participants");
 
 		connection = new DelregningConnection(username, password);
 		presentExpenses(slug);
@@ -78,7 +78,7 @@ public class BillActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.button_delete:
-			//connection.deleteBill(slug);
+			connection.deleteBill(slug);
 			finish();
 			return true;
 		case R.id.button_new_participant:
@@ -110,7 +110,7 @@ public class BillActivity extends ListActivity {
 						String mEmail = ((EditText) newParticipantDialogView.findViewById(R.id.edit_email)).getText().toString();
 						if(mName != null && mEmail != null){
 							connection.registerParticipant(slug, mName, mEmail);
-							//connection.addParticipant(slug, participant.getInt("id"), ((Checkable) newParticipantDialogView.findViewById(R.id.checkbox_send_invitation)).isChecked());
+							//connection.addParticipant(slug, mParticipants.getInt("id"), ((Checkable) newParticipantDialogView.findViewById(R.id.checkbox_send_invitation)).isChecked());
 						}
 					
 
@@ -124,6 +124,7 @@ public class BillActivity extends ListActivity {
 
 			dialog = (Dialog)addParticipantDialogBuilder.show();
 			break;
+			
 		case NEW_PAYMENT_DIALOG:
 			newPaymentDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
 			newPaymentDialogBuilder.setTitle(R.string.new_payment);
@@ -144,6 +145,12 @@ public class BillActivity extends ListActivity {
 
 			dialog = (Dialog)newPaymentDialogBuilder.show();
 			break;
+			
+		case ADD_PARTICIPANT_DIALOG:
+			
+			dialog = null;
+			break;
+			
 		default:
 			dialog = null;
 			break;
@@ -178,10 +185,13 @@ public class BillActivity extends ListActivity {
 				item.put("paid_by", getResources().getText(R.string.paid_by) + " " + paid_by.getString("name"));
 				JSONArray split_between = expense.getJSONArray("split_between");
 				JSONObject splitObject =  split_between.getJSONObject(0);
-				String splitString = getResources().getText(R.string.split_between) + " " + paid_by.getString("name") + ", " + splitObject.getString("name");
-				for (int n = 1; n < split_between.length(); n++){
+				String splitString = (String) getResources().getText(R.string.split_between);
+				for (int n = 0; n < split_between.length(); n++){
 					splitObject = split_between.getJSONObject(n);
-					splitString = splitObject.getString("name"); 				
+					if (n != 0){
+						splitString = splitString + ", ";
+					}
+					splitString = splitString + splitObject.getString("name"); 				
 				}
 				item.put("split_between", splitString);
 				list.add(item);

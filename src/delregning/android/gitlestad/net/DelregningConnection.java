@@ -40,7 +40,7 @@ public class DelregningConnection {
 
 	public JSONArray getBills(){
 		try{
-			HttpGet httpget = new HttpGet("http://delregning.no/bills/all/");
+			HttpGet httpget = new HttpGet("http://splitabill.com/bills/all/");
 			httpget.setHeader("Accept", "application/json");
 			httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
 			HttpResponse response = httpClient.execute(httpget);
@@ -60,7 +60,7 @@ public class DelregningConnection {
 	public JSONObject getBill(String slug){
 
 		try{
-			HttpGet httpget = new HttpGet("http://delregning.no/bills/" + slug + "/");
+			HttpGet httpget = new HttpGet("https://splitabill.com/bills/" + slug + "/");
 			httpget.setHeader("Accept", "application/json");
 			httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
 			HttpResponse response = httpClient.execute(httpget);
@@ -77,25 +77,14 @@ public class DelregningConnection {
 	}
 
 	public void deleteBill(String slug){
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/delete/");
-		httppost.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
-		httppost.setHeader("Accept", "application/json");
-		httppost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-		try{
-			HttpResponse response = httpClient.execute(httppost);
-			HttpEntity entity = response.getEntity();
-			InputStream stream = entity.getContent();
-			String temp = convertStreamToString(stream);
-			System.err.print(temp);
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/delete/");
+		
+		postData(httppost, null);
 	}
 	
 	public JSONObject updateBill(String slug, String title, String description, String notification, String reminder_interval, String background){
 		
-		HttpPost httppost = new HttpPost("http://delregning.no/bills" + slug + "/update/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills" + slug + "/settings/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("title", title));
 		urldata.add(new BasicNameValuePair("description", description));
@@ -108,20 +97,22 @@ public class DelregningConnection {
 	
 	public JSONObject registerParticipant(String slug, String name, String email){
 		
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "participants/add/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "participants/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("name", name));
 		urldata.add(new BasicNameValuePair("email", email));
-		urldata.add(new BasicNameValuePair("payment_info", "")); 
+		urldata.add(new BasicNameValuePair("payment_info", ""));
+		urldata.add(new BasicNameValuePair("new", "1"));
 		
 		return postData(httppost, urldata);
 	}
 	
 	public JSONObject addParticipant(String slug, int participant, boolean send_invitation){
 		
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/participants/add/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/participants/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("participant", Integer.toString(participant)));
+		urldata.add(new BasicNameValuePair("existing", "1"));
 		urldata.add(new BasicNameValuePair("send_invitation", Boolean.toString(send_invitation))); 
 		
 		return postData(httppost, urldata);
@@ -129,15 +120,13 @@ public class DelregningConnection {
 	
 	public JSONObject removeParticipant(String slug, int participant){
 		
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/participants/remove/");
-		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
-		urldata.add(new BasicNameValuePair("participant", Integer.toString(participant)));  
-		
-		return postData(httppost, urldata);
+		HttpPost httppost = new HttpPost("http://splitabill.com/bills/" + slug + "/participants/" + Integer.toString(participant) + "/remove/");
+				
+		return postData(httppost, null);
 	}
 	
 	public JSONObject addExpense(String slug, String description, String amount, String paid_by, String[] split_between){
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/expenses/add/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expenses/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("amount", amount));  
 		urldata.add(new BasicNameValuePair("paid_by", paid_by));
@@ -151,14 +140,14 @@ public class DelregningConnection {
 	
 	public JSONObject removeExpense(String slug, String expense){
 		
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/expense/" + expense + "/remove/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expense/" + expense + "/remove/");
 		
 		return postData(httppost, null);
 	}
 	
 	public JSONObject addPayment(String slug, String amount, String paid_by, String paid_to){
 		
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/create/");
+		HttpPost httppost = new HttpPost("http://splitabill.com/bills/create/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("amount", amount));  
 		urldata.add(new BasicNameValuePair("paid_by", paid_by));
@@ -168,19 +157,44 @@ public class DelregningConnection {
 	}
 	
 	public JSONObject removePayment(String slug, int payment_id){
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/" + slug + "/payments/" + payment_id + "/remove/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/payments/" + payment_id + "/remove/");
 		
 		return postData(httppost, null);
 	}
 
 	public JSONObject addBill(String title, String description){
 
-		HttpPost httppost = new HttpPost("http://delregning.no/bills/add/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/create/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("title", title));  
 		urldata.add(new BasicNameValuePair("description", description));
 		
 		return postData(httppost, urldata);
+	}
+	
+	public ArrayList<JSONObject> getParticipants(){
+		ArrayList<JSONObject> participants = new ArrayList<JSONObject>();
+		
+		try{
+			HttpGet httpget = new HttpGet("https://splitabill.com/bills/participants/");
+			httpget.setHeader("Accept", "application/json");
+			httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
+			HttpResponse response = httpClient.execute(httpget);
+			HttpEntity entity = response.getEntity();
+			InputStream stream = entity.getContent();
+			JSONObject participantsObject = new JSONObject(convertStreamToString(stream));
+			JSONArray participantsArray = participantsObject.getJSONArray("participants");
+
+			for(int i = 0; i > participantsArray.length(); i++){
+				participants.add(participants.get(i));
+			}
+
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		return participants;
+
 	}
 		
 	private JSONObject postData(HttpPost httpPost, List<NameValuePair> urlData){

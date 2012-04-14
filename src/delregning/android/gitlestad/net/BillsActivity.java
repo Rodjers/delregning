@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import delregning.android.gitlestad.net.R;
+
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -51,11 +53,8 @@ public class BillsActivity extends ListActivity {
 		mBills = connection.getBills();
 
 		presentBills(mBills);
-		try {
-			mParticipants = getParticipants(mBills);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+
+		mParticipants = connection.getParticipants();
 	}
 	
 	@Override
@@ -98,7 +97,7 @@ public class BillsActivity extends ListActivity {
 				public void onClick(DialogInterface dialog, int whichButton) {	
 					connection.addBill(((EditText) dialogView.findViewById(R.id.edit_title)).getText().toString(),
 									   ((EditText) dialogView.findViewById(R.id.edit_description)).getText().toString());
-					presentBills(mBills);
+					presentBills(connection.getBills());
 				}
 			});
 			addBillDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -166,22 +165,5 @@ public class BillsActivity extends ListActivity {
 				}
 			}
 		});
-	}
-	
-	private ArrayList<JSONObject> getParticipants(JSONArray bills) throws JSONException{
-		
-		ArrayList<JSONObject> participantList = new ArrayList<JSONObject>();
-		
-		for (int i = 0; i < bills.length(); i++){
-			JSONArray participants = bills.getJSONObject(i).getJSONArray("participants");
-			for (int j = 0; i < participants.length(); j++){
-				JSONObject participant = participants.getJSONObject(j);
-				if (!participantList.contains(participant)){
-				participantList.add(participant);
-				}
-			}
-		}
-		
-		return participantList;
 	}
 }

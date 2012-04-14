@@ -18,7 +18,6 @@
         <activity android:name=".BillsActivity"/>
         <activity android:name=".BillActivity"/>      
         <activity android:name=".AddBillActivity"/>
-
     </application>
     <uses-permission android:name="android.permission.INTERNET">
     </uses-permission>
