@@ -97,7 +97,7 @@ public class DelregningConnection {
 	
 	public JSONObject registerParticipant(String slug, String name, String email){
 		
-		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "participants/add/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/participants/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("name", name));
 		urldata.add(new BasicNameValuePair("email", email));
@@ -127,12 +127,15 @@ public class DelregningConnection {
 	
 	public JSONObject addExpense(String slug, String description, String amount, String paid_by, String[] split_between){
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expenses/add/");
-		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);
+		urldata.add(new BasicNameValuePair("description", description));
 		urldata.add(new BasicNameValuePair("amount", amount));  
 		urldata.add(new BasicNameValuePair("paid_by", paid_by));
 		
+		if (split_between != null){
 		for(int i = 0; i < Arrays.asList(split_between).size(); i++){
 		urldata.add(new BasicNameValuePair("split_between", split_between[i]));
+		}
 		}
 		
 		return postData(httppost, urldata);
@@ -187,6 +190,27 @@ public class DelregningConnection {
 
 			for(int i = 0; i > participantsArray.length(); i++){
 				participants.add(participants.get(i));
+			}
+
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		return participants;
+
+	}
+	
+	public ArrayList<JSONObject> getParticipantsOfBill(String slug){
+		ArrayList<JSONObject> participants = new ArrayList<JSONObject>();
+		
+		try{
+			
+			JSONObject participantsObject = getBill(slug);
+			JSONObject mJSONObject = participantsObject.getJSONObject("bill");
+			JSONArray participantsArray = mJSONObject.getJSONArray("participants");
+
+			for(int i = 0; i < participantsArray.length(); i++){
+				participants.add(participantsArray.getJSONObject(i));
 			}
 
 		}

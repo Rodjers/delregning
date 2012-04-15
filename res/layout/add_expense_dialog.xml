@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:background="#fff"
+    android:padding="10dp"
+    android:id="@+id/add_expense_layout">
+    <TextView android:id="@+id/text_description" android:layout_width="wrap_content" android:text="@string/description" android:layout_height="wrap_content"></TextView>
+    <EditText android:id="@+id/edit_description" android:layout_width="match_parent" android:layout_height="wrap_content"></EditText>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/text_amount" android:text="@string/amount"></TextView>
+    <EditText android:layout_height="wrap_content" android:id="@+id/edit_amount" android:layout_width="match_parent" android:inputType="numberDecimal">
+        <requestFocus></requestFocus>
+    </EditText>
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/paid_by" android:id="@+id/text_paid_by"></TextView>
+    <Spinner android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/spinner_paid_by"></Spinner>
+</LinearLayout>

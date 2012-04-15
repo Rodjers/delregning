@@ -3,8 +3,10 @@ package delregning.android.gitlestad.net;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 //import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,10 +28,13 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 //import android.widget.Checkable;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 public class BillActivity extends ListActivity {
 
@@ -40,10 +45,14 @@ public class BillActivity extends ListActivity {
 	private JSONObject bill;
 	private AlertDialog.Builder addParticipantDialogBuilder;
 	private AlertDialog.Builder newPaymentDialogBuilder;
+	private AlertDialog.Builder addExpenseDialogBuilder;
 	private static final int NEW_PARTICIPANT_DIALOG = 1;
 	private static final int NEW_PAYMENT_DIALOG = 2;
 	private static final int ADD_PARTICIPANT_DIALOG = 3;
-//	private ArrayList<JSONObject> mParticipants;
+	private static final int ADD_EXPENSE_DIALOG = 4;
+	private ArrayList<String> mParticipantsName;
+	private ArrayList<String> mParticipantsId;
+	private String participantId;
 
 
 //	@SuppressWarnings("unchecked")
@@ -57,10 +66,23 @@ public class BillActivity extends ListActivity {
 		username = bundle.getString("username");
 		password = bundle.getString("password");
 		slug = bundle.getString("slug");
+		mParticipantsName = new ArrayList<String>();
+		mParticipantsId = new ArrayList<String>();
 
-//		mParticipants = (ArrayList<JSONObject>)bundle.get("participants");
+
 
 		connection = new DelregningConnection(username, password);
+		ArrayList<JSONObject> mJSONParticipants = connection.getParticipantsOfBill(slug);
+		Iterator<JSONObject> it = mJSONParticipants.iterator();
+		while (it.hasNext()){
+			try {
+				JSONObject tempParticipant = it.next();
+				mParticipantsName.add(tempParticipant.getString("name"));
+				mParticipantsId.add(new Integer(tempParticipant.getInt("id")).toString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 		presentExpenses(slug);
 
 
@@ -151,6 +173,33 @@ public class BillActivity extends ListActivity {
 			dialog = null;
 			break;
 			
+		case ADD_EXPENSE_DIALOG:
+			
+			addExpenseDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
+			addExpenseDialogBuilder.setTitle(R.string.new_expense);
+			final View addExpenseDialogView = LayoutInflater.from(this).inflate(R.layout.add_expense_dialog, (ViewGroup) findViewById(R.id.add_expense_layout));
+			addExpenseDialogBuilder.setView(addExpenseDialogView);
+			Spinner paidBySpinner = (Spinner)addExpenseDialogView.findViewById(R.id.spinner_paid_by);
+			ArrayAdapter<String> paidBySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mParticipantsName);
+			paidBySpinner.setAdapter(paidBySpinnerAdapter);
+			paidBySpinner.setOnItemSelectedListener(addExpenseListener);
+			addExpenseDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					String description = ((EditText) addExpenseDialogView.findViewById(R.id.edit_description)).getText().toString();
+					String amount = ((EditText) addExpenseDialogView.findViewById(R.id.edit_amount)).getText().toString();
+					connection.addExpense(slug, description, amount, participantId, null);
+
+				}
+			});
+			addExpenseDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+
+				}
+			});	
+
+			dialog = (Dialog)addExpenseDialogBuilder.show();
+			break;
+			
 		default:
 			dialog = null;
 			break;
@@ -164,6 +213,21 @@ public class BillActivity extends ListActivity {
 			showDialog(ADD_PARTICIPANT_DIALOG);
 
 		}
+	};
+	
+	private OnItemSelectedListener addExpenseListener = new OnItemSelectedListener(){
+
+		public void onItemSelected(AdapterView<?> parent, View view, int pos,
+				long id) {
+			participantId = mParticipantsId.get(pos);
+			
+		}
+
+		public void onNothingSelected(AdapterView<?> parent) {
+			// Do nothing
+			
+		}
+		
 	};
 
 
@@ -207,7 +271,9 @@ public class BillActivity extends ListActivity {
 				lv.setOnItemClickListener(new OnItemClickListener() {
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-						//TODO Add show expense dialog
+						if (position == lv.getCount( ) -1){
+							showDialog(ADD_EXPENSE_DIALOG);
+						}
 
 					}
 				});
