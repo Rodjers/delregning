@@ -248,6 +248,7 @@ public class BillActivity extends ListActivity {
 				JSONObject paid_by = expense.getJSONObject("paid_by");
 				item.put("paid_by", getResources().getText(R.string.paid_by) + " " + paid_by.getString("name"));
 				JSONArray split_between = expense.getJSONArray("split_between");
+				if (split_between.length() != 0){
 				JSONObject splitObject =  split_between.getJSONObject(0);
 				String splitString = (String) getResources().getText(R.string.split_between);
 				for (int n = 0; n < split_between.length(); n++){
@@ -257,7 +258,9 @@ public class BillActivity extends ListActivity {
 					}
 					splitString = splitString + splitObject.getString("name"); 				
 				}
+				
 				item.put("split_between", splitString);
+				}
 				list.add(item);
 			}
 
