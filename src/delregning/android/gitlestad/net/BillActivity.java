@@ -29,10 +29,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 //import android.widget.Checkable;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -106,8 +110,8 @@ public class BillActivity extends ListActivity {
 		case R.id.button_new_participant:
 			showDialog(NEW_PARTICIPANT_DIALOG);
 			return true;
-		case R.id.button_new_payment:
-			showDialog(NEW_PAYMENT_DIALOG);
+		case R.id.button_new_expense:
+			showDialog(ADD_EXPENSE_DIALOG);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -183,11 +187,27 @@ public class BillActivity extends ListActivity {
 			ArrayAdapter<String> paidBySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mParticipantsName);
 			paidBySpinner.setAdapter(paidBySpinnerAdapter);
 			paidBySpinner.setOnItemSelectedListener(addExpenseListener);
+			
+			TableLayout participantsTable = (TableLayout)addExpenseDialogView.findViewById(R.id.table_split_between);
+			
+			for (int i = 0; i < mParticipantsName.size(); i++){
+				CheckBox checkbox = new CheckBox(this);
+				TextView textView = new TextView(this);
+				TableRow tableRow = new TableRow(this);
+				textView.setText(mParticipantsName.get(i));
+				
+				tableRow.addView(checkbox);
+				tableRow.addView(textView);
+				participantsTable.addView(tableRow);
+				
+			}
+			
 			addExpenseDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String description = ((EditText) addExpenseDialogView.findViewById(R.id.edit_description)).getText().toString();
 					String amount = ((EditText) addExpenseDialogView.findViewById(R.id.edit_amount)).getText().toString();
 					connection.addExpense(slug, description, amount, participantId, null);
+					presentExpenses(slug);
 
 				}
 			});
@@ -269,6 +289,13 @@ public class BillActivity extends ListActivity {
 				lastItem.put("title", (String) getResources().getText(R.string.no_expenses));
 				lastItem.put("paid_by", (String) getResources().getText(R.string.click_new_expense));
 				list.add(lastItem);
+			}
+			else {
+				HashMap<String,String> lastItem = new HashMap<String,String>();
+				lastItem.put("title", (String) getResources().getText(R.string.add_expense));
+				lastItem.put("paid_by", (String) getResources().getText(R.string.click_new_expense));
+				list.add(lastItem);
+			}
 
 				final ListView lv = getListView();
 				lv.setOnItemClickListener(new OnItemClickListener() {
@@ -280,7 +307,7 @@ public class BillActivity extends ListActivity {
 
 					}
 				});
-			}
+			
 
 			setListAdapter(new SimpleAdapter(
 					this, 

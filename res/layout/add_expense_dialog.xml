@@ -14,4 +14,7 @@
     </EditText>
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/paid_by" android:id="@+id/text_paid_by"></TextView>
     <Spinner android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/spinner_paid_by"></Spinner>
+    <TextView android:text="@string/split_between" android:id="@+id/text_split_between" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <TableLayout android:layout_width="match_parent" android:stretchColumns="1" android:layout_height="wrap_content" android:id="@+id/table_split_between">
+    </TableLayout>
 </LinearLayout>
