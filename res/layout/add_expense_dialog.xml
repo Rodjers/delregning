@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView 	android:id="@+id/add_expense_layout"
+				xmlns:android="http://schemas.android.com/apk/res/android" 
+				android:fillViewport="true"
+				android:layout_width="match_parent" 
+				android:layout_height="match_parent">
+<LinearLayout 
     android:orientation="vertical"
-    android:layout_height="wrap_content"
-    android:layout_width="fill_parent"
     android:background="#fff"
     android:padding="10dp"
-    android:id="@+id/add_expense_layout">
+    android:id="@+id/add_expense_linear_layout"
+    android:layout_height="match_parent" android:layout_width="match_parent">
     <TextView android:id="@+id/text_description" android:layout_width="wrap_content" android:text="@string/description" android:layout_height="wrap_content"></TextView>
     <EditText android:id="@+id/edit_description" android:layout_width="match_parent" android:layout_height="wrap_content"></EditText>
     <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/text_amount" android:text="@string/amount"></TextView>
-    <EditText android:layout_height="wrap_content" android:id="@+id/edit_amount" android:layout_width="match_parent" android:inputType="numberDecimal">
-        <requestFocus></requestFocus>
-    </EditText>
+    <EditText android:layout_height="wrap_content" android:id="@+id/edit_amount" android:layout_width="match_parent" android:inputType="numberDecimal"></EditText>
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/paid_by" android:id="@+id/text_paid_by"></TextView>
     <Spinner android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/spinner_paid_by"></Spinner>
     <TextView android:text="@string/split_between" android:id="@+id/text_split_between" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
     <TableLayout android:layout_width="match_parent" android:stretchColumns="1" android:layout_height="wrap_content" android:id="@+id/table_split_between">
     </TableLayout>
 </LinearLayout>
+</ScrollView>

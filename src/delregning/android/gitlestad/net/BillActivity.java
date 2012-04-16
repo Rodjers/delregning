@@ -16,6 +16,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -36,7 +37,6 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -48,12 +48,10 @@ public class BillActivity extends ListActivity {
 	private DelregningConnection connection;
 	private JSONObject bill;
 	private AlertDialog.Builder addParticipantDialogBuilder;
-	private AlertDialog.Builder newPaymentDialogBuilder;
 	private AlertDialog.Builder addExpenseDialogBuilder;
 	private static final int NEW_PARTICIPANT_DIALOG = 1;
-	private static final int NEW_PAYMENT_DIALOG = 2;
-	private static final int ADD_PARTICIPANT_DIALOG = 3;
-	private static final int ADD_EXPENSE_DIALOG = 4;
+	private static final int ADD_PARTICIPANT_DIALOG = 2;
+	private static final int ADD_EXPENSE_DIALOG = 3;
 	private ArrayList<String> mParticipantsName;
 	private ArrayList<String> mParticipantsId;
 	private String participantId;
@@ -151,27 +149,6 @@ public class BillActivity extends ListActivity {
 			dialog = (Dialog)addParticipantDialogBuilder.show();
 			break;
 			
-		case NEW_PAYMENT_DIALOG:
-			newPaymentDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
-			newPaymentDialogBuilder.setTitle(R.string.new_payment);
-			final View newPaymentDialogView = LayoutInflater.from(this).inflate(R.layout.new_payment_dialog, (ViewGroup) findViewById(R.id.new_payment_layout));
-			newPaymentDialogBuilder.setView(newPaymentDialogView);
-			newPaymentDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-
-
-
-				}
-			});
-			newPaymentDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-
-				}
-			});	
-
-			dialog = (Dialog)newPaymentDialogBuilder.show();
-			break;
-			
 		case ADD_PARTICIPANT_DIALOG:
 			
 			dialog = null;
@@ -188,16 +165,13 @@ public class BillActivity extends ListActivity {
 			paidBySpinner.setAdapter(paidBySpinnerAdapter);
 			paidBySpinner.setOnItemSelectedListener(addExpenseListener);
 			
-			TableLayout participantsTable = (TableLayout)addExpenseDialogView.findViewById(R.id.table_split_between);
-			
+			final TableLayout participantsTable = (TableLayout)addExpenseDialogView.findViewById(R.id.table_split_between);
 			for (int i = 0; i < mParticipantsName.size(); i++){
-				CheckBox checkbox = new CheckBox(this);
-				TextView textView = new TextView(this);
+				CheckBox checkBox = new CheckBox(this);
 				TableRow tableRow = new TableRow(this);
-				textView.setText(mParticipantsName.get(i));
-				
-				tableRow.addView(checkbox);
-				tableRow.addView(textView);
+				checkBox.setText(mParticipantsName.get(i));
+				checkBox.setTextColor(Color.BLACK);
+				tableRow.addView(checkBox);
 				participantsTable.addView(tableRow);
 				
 			}
@@ -206,7 +180,16 @@ public class BillActivity extends ListActivity {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String description = ((EditText) addExpenseDialogView.findViewById(R.id.edit_description)).getText().toString();
 					String amount = ((EditText) addExpenseDialogView.findViewById(R.id.edit_amount)).getText().toString();
-					connection.addExpense(slug, description, amount, participantId, null);
+					ArrayList<String> split_between = new ArrayList<String>();
+					
+					for (int i = 0; i < participantsTable.getChildCount(); i++){
+						if(((CheckBox)((TableRow)participantsTable.getChildAt(i)).getChildAt(0)).isChecked()){
+							split_between.add(mParticipantsId.get(i));
+						}
+						
+					}
+					
+					connection.addExpense(slug, description, amount, participantId, split_between);
 					presentExpenses(slug);
 
 				}
