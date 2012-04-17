@@ -145,9 +145,28 @@ public class DelregningConnection {
 	
 	public JSONObject removeExpense(String slug, String expense){
 		
-		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expense/" + expense + "/remove/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expense/" + expense + "/delete/");
 		
 		return postData(httppost, null);
+	}
+	
+public JSONObject updateExpense(String slug, String expense, String description, String amount, String paid_by, ArrayList<String> split_between){
+		
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expenses/" + expense + "/");
+		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);
+		urldata.add(new BasicNameValuePair("description", description));
+		urldata.add(new BasicNameValuePair("amount", amount));  
+		urldata.add(new BasicNameValuePair("paid_by", paid_by));
+		
+		if (split_between != null){
+			Iterator<String> it = split_between.iterator();
+			
+			while(it.hasNext()){
+				urldata.add(new BasicNameValuePair("split_between", it.next()));
+			}
+		}
+		
+		return postData(httppost, urldata);
 	}
 	
 	public JSONObject addPayment(String slug, String amount, String paid_by, String paid_to){

@@ -98,11 +98,12 @@ public class BillsActivity extends ListActivity {
 					connection.addBill(((EditText) dialogView.findViewById(R.id.edit_title)).getText().toString(),
 									   ((EditText) dialogView.findViewById(R.id.edit_description)).getText().toString());
 					presentBills(connection.getBills());
+					dismissDialog(ADD_BILL_DIALOG);
 				}
 			});
 			addBillDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					
+					dismissDialog(ADD_BILL_DIALOG);
 				}
 			});	
 			dialog = (Dialog)addBillDialogBuilder.show();

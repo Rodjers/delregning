@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
@@ -49,12 +50,16 @@ public class BillActivity extends ListActivity {
 	private JSONObject bill;
 	private AlertDialog.Builder addParticipantDialogBuilder;
 	private AlertDialog.Builder addExpenseDialogBuilder;
+	private AlertDialog.Builder editExpenseDialogBuilder;
 	private static final int NEW_PARTICIPANT_DIALOG = 1;
 	private static final int ADD_PARTICIPANT_DIALOG = 2;
 	private static final int ADD_EXPENSE_DIALOG = 3;
+	private static final int EDIT_EXPENSE_DIALOG = 4;
 	private ArrayList<String> mParticipantsName;
 	private ArrayList<String> mParticipantsId;
 	private String participantId;
+	private JSONObject currentExpense;
+	
 
 
 //	@SuppressWarnings("unchecked")
@@ -120,6 +125,7 @@ public class BillActivity extends ListActivity {
 	protected Dialog onCreateDialog(int id){
 
 		Dialog dialog;
+		ArrayAdapter<String> paidBySpinnerAdapter;
 		switch(id){
 		case NEW_PARTICIPANT_DIALOG:
 			addParticipantDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
@@ -136,12 +142,12 @@ public class BillActivity extends ListActivity {
 							connection.registerParticipant(slug, mName, mEmail);
 							//connection.addParticipant(slug, mParticipants.getInt("id"), ((Checkable) newParticipantDialogView.findViewById(R.id.checkbox_send_invitation)).isChecked());
 						}
-					
-
+						dismissDialog(ADD_PARTICIPANT_DIALOG);
 				}
 			});
 			addParticipantDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
+					dismissDialog(ADD_PARTICIPANT_DIALOG);
 
 				}
 			});	
@@ -158,21 +164,21 @@ public class BillActivity extends ListActivity {
 			
 			addExpenseDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
 			addExpenseDialogBuilder.setTitle(R.string.new_expense);
-			final View addExpenseDialogView = LayoutInflater.from(this).inflate(R.layout.add_expense_dialog, (ViewGroup) findViewById(R.id.add_expense_layout));
+			final View addExpenseDialogView = LayoutInflater.from(this).inflate(R.layout.expense_dialog, (ViewGroup) findViewById(R.id.expense_dialog_layout));
 			addExpenseDialogBuilder.setView(addExpenseDialogView);
 			Spinner paidBySpinner = (Spinner)addExpenseDialogView.findViewById(R.id.spinner_paid_by);
-			ArrayAdapter<String> paidBySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mParticipantsName);
+			paidBySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mParticipantsName);
 			paidBySpinner.setAdapter(paidBySpinnerAdapter);
-			paidBySpinner.setOnItemSelectedListener(addExpenseListener);
+			paidBySpinner.setOnItemSelectedListener(paidBySpinnerListener);
 			
-			final TableLayout participantsTable = (TableLayout)addExpenseDialogView.findViewById(R.id.table_split_between);
+			final TableLayout addExpenseParticipantsTable = (TableLayout)addExpenseDialogView.findViewById(R.id.table_split_between);
 			for (int i = 0; i < mParticipantsName.size(); i++){
 				CheckBox checkBox = new CheckBox(this);
 				TableRow tableRow = new TableRow(this);
 				checkBox.setText(mParticipantsName.get(i));
 				checkBox.setTextColor(Color.BLACK);
 				tableRow.addView(checkBox);
-				participantsTable.addView(tableRow);
+				addExpenseParticipantsTable.addView(tableRow);
 				
 			}
 			
@@ -180,27 +186,117 @@ public class BillActivity extends ListActivity {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					String description = ((EditText) addExpenseDialogView.findViewById(R.id.edit_description)).getText().toString();
 					String amount = ((EditText) addExpenseDialogView.findViewById(R.id.edit_amount)).getText().toString();
-					ArrayList<String> split_between = new ArrayList<String>();
+					ArrayList<String> splitBetween = new ArrayList<String>();
 					
-					for (int i = 0; i < participantsTable.getChildCount(); i++){
-						if(((CheckBox)((TableRow)participantsTable.getChildAt(i)).getChildAt(0)).isChecked()){
-							split_between.add(mParticipantsId.get(i));
+					for (int i = 0; i < addExpenseParticipantsTable.getChildCount(); i++){
+						if(((CheckBox)((TableRow)addExpenseParticipantsTable.getChildAt(i)).getChildAt(0)).isChecked()){
+							splitBetween.add(mParticipantsId.get(i));
+							
 						}
 						
 					}
 					
-					connection.addExpense(slug, description, amount, participantId, split_between);
+					connection.addExpense(slug, description, amount, participantId, splitBetween);
+					dismissDialog(ADD_EXPENSE_DIALOG);
 					presentExpenses(slug);
 
 				}
 			});
 			addExpenseDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
+					dismissDialog(ADD_EXPENSE_DIALOG);
 
 				}
 			});	
 
 			dialog = (Dialog)addExpenseDialogBuilder.show();
+			break;
+			
+		case EDIT_EXPENSE_DIALOG:
+			editExpenseDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
+			try {
+				editExpenseDialogBuilder.setTitle(currentExpense.getString("description"));
+			
+				final View editExpenseDialogView = LayoutInflater.from(this).inflate(R.layout.expense_dialog, (ViewGroup) findViewById(R.id.expense_dialog_layout));
+				EditText expenseName = (EditText)editExpenseDialogView.findViewById(R.id.edit_description);
+				expenseName.setText(currentExpense.getString("description"));
+				EditText expenseAmount = (EditText)editExpenseDialogView.findViewById(R.id.edit_amount);
+				expenseAmount.setText(currentExpense.getString("amount"));
+				paidBySpinner = (Spinner)editExpenseDialogView.findViewById(R.id.spinner_paid_by);
+				paidBySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mParticipantsName);
+				paidBySpinner.setAdapter(paidBySpinnerAdapter);
+				paidBySpinner.setSelection(mParticipantsName.indexOf(((JSONObject)currentExpense.get("paid_by")).getString("name")));
+				paidBySpinner.setOnItemSelectedListener(paidBySpinnerListener);
+				Button deleteExpenseButton = new Button(this);
+				deleteExpenseButton.setText(R.string.delete_expense);
+				
+//				LinearLayout.LayoutParams lllp = (LinearLayout.LayoutParams) deleteExpenseButton.getLayoutParams();
+//				lllp.gravity=Gravity.CENTER;
+//				deleteExpenseButton.setLayoutParams(lllp);
+				deleteExpenseButton.setOnClickListener(deleteExpenseListener);
+				JSONArray splitBetweenJSON = currentExpense.getJSONArray("split_between");
+				ArrayList<String> splitBetweenArray = new ArrayList<String>();
+				for (int i = 0; i < splitBetweenJSON.length(); i++){
+					splitBetweenArray.add(splitBetweenJSON.getJSONObject(i).getString("name"));
+				}
+				
+				final TableLayout editExpenseParticipantsTable = (TableLayout)editExpenseDialogView.findViewById(R.id.table_split_between);
+				for (int i = 0; i < mParticipantsName.size(); i++){
+					CheckBox checkBox = new CheckBox(this);
+					TableRow tableRow = new TableRow(this);
+					checkBox.setText(mParticipantsName.get(i));
+					if (splitBetweenArray.indexOf(mParticipantsName.get(i)) != -1){
+						checkBox.setChecked(true);
+					}
+					else {
+						checkBox.setChecked(false);
+					}
+					checkBox.setTextColor(Color.BLACK);
+					tableRow.addView(checkBox);
+					editExpenseParticipantsTable.addView(tableRow);
+					
+				}
+				
+				LinearLayout editExpenseLinearLayout = (LinearLayout)editExpenseDialogView.findViewById(R.id.expense_linear_layout);
+				
+				editExpenseLinearLayout.addView(deleteExpenseButton);
+							
+				editExpenseDialogBuilder.setView(editExpenseDialogView);
+				
+				editExpenseDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						String description = ((EditText) editExpenseDialogView.findViewById(R.id.edit_description)).getText().toString();
+						String amount = ((EditText) editExpenseDialogView.findViewById(R.id.edit_amount)).getText().toString();
+						ArrayList<String> splitBetween = new ArrayList<String>();
+						
+						for (int i = 0; i < editExpenseParticipantsTable.getChildCount(); i++){
+							if(((CheckBox)((TableRow)editExpenseParticipantsTable.getChildAt(i)).getChildAt(0)).isChecked()){
+								splitBetween.add(mParticipantsId.get(i));
+								
+							}
+							
+						}
+						try {
+							connection.updateExpense(slug, new Integer(currentExpense.getInt("id")).toString(), description, amount, participantId, splitBetween);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						removeDialog(EDIT_EXPENSE_DIALOG);
+						presentExpenses(slug);
+
+					}
+				});
+				editExpenseDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						removeDialog(EDIT_EXPENSE_DIALOG);
+					}
+				});	
+			
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			dialog = (Dialog)editExpenseDialogBuilder.show();
+			
 			break;
 			
 		default:
@@ -212,13 +308,25 @@ public class BillActivity extends ListActivity {
 	
 	private OnClickListener addExistingListener = new OnClickListener(){
 		public void onClick(View v){
-			dismissDialog(NEW_PARTICIPANT_DIALOG);
+			removeDialog(NEW_PARTICIPANT_DIALOG);
 			showDialog(ADD_PARTICIPANT_DIALOG);
 
 		}
 	};
+	private OnClickListener deleteExpenseListener = new OnClickListener(){
+		public void onClick(View v){
+			try {
+				connection.removeExpense(slug, new Integer(currentExpense.getInt("id")).toString());
+			} catch (JSONException e) {
+				e.printStackTrace();
+				removeDialog(EDIT_EXPENSE_DIALOG);
+				presentExpenses(slug);
+			}
+
+		}
+	};
 	
-	private OnItemSelectedListener addExpenseListener = new OnItemSelectedListener(){
+	private OnItemSelectedListener paidBySpinnerListener = new OnItemSelectedListener(){
 
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
@@ -239,7 +347,7 @@ public class BillActivity extends ListActivity {
 		try{
 			JSONObject tBill = connection.getBill(slug);
 			bill = tBill.getJSONObject("bill");
-			JSONArray expenses = bill.getJSONArray("expenses");
+			final JSONArray expenses = bill.getJSONArray("expenses");
 			ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
 
 			for (int i = 0; i < expenses.length(); i++){
@@ -287,6 +395,14 @@ public class BillActivity extends ListActivity {
 
 						if (position == lv.getCount( ) -1){
 							showDialog(ADD_EXPENSE_DIALOG);
+						}
+						else {
+							try {
+								currentExpense = expenses.getJSONObject(position);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}				
+							showDialog(EDIT_EXPENSE_DIALOG);
 						}
 
 					}
