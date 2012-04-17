@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <LinearLayout 	android:id="@+id/expense_dialog_layout" 
+    				android:layout_width="fill_parent" 
+    				android:layout_height="fill_parent" 
+    				xmlns:android="http://schemas.android.com/apk/res/android"
+    				android:orientation="vertical">
+        <Button android:layout_height="wrap_content" android:id="@+id/button_add_more_participants" android:text="@string/add_more_participants" android:layout_width="match_parent"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/button_delete_expense" android:text="@string/delete_expense" android:layout_width="match_parent"></Button>
+    </LinearLayout>

@@ -248,6 +248,7 @@ public class BillActivity extends ListActivity {
 				item.put("title", expense.getString("description"));
 				int amount = expense.getInt("amount");
 				item.put("amount", Integer.toString(amount));
+				item.put("date", expense.getString("added_date").substring(0,10));
 				JSONObject paid_by = expense.getJSONObject("paid_by");
 				item.put("paid_by", getResources().getText(R.string.paid_by) + " " + paid_by.getString("name"));
 				JSONArray split_between = expense.getJSONArray("split_between");
@@ -296,8 +297,8 @@ public class BillActivity extends ListActivity {
 					this, 
 					list,
 					R.layout.expense,
-					new String[] {"title","amount","paid_by","split_between"},
-					new int[] {R.id.title, R.id.amount, R.id.paid_by, R.id.split_between}));
+					new String[] {"title","amount","paid_by","split_between", "date"},
+					new int[] {R.id.title, R.id.amount, R.id.paid_by, R.id.split_between, R.id.date}));
 		}
 		catch (Exception e){
 			e.printStackTrace();

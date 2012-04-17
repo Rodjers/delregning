@@ -17,21 +17,23 @@
      			android:layout_height="wrap_content" 
      			android:layout_width="wrap_content"
      			android:textStyle="bold"
-     			android:textSize="20sp">
+     			android:textSize="16sp">
     </TextView>
     <TextView 	android:layout_below="@+id/title" 
     			android:text="TextView" 
     			android:layout_height="wrap_content" 
     			android:layout_width="wrap_content" 
     			android:layout_alignLeft="@+id/title" 
-    			android:id="@+id/paid_by">
+    			android:id="@+id/paid_by"
+    			android:textSize="10sp">
    	</TextView>
     <TextView 	android:layout_below="@+id/paid_by" 
     			android:text="TextView" 
     			android:layout_height="wrap_content" 
     			android:layout_width="wrap_content" 
     			android:layout_alignLeft="@+id/paid_by" 
-    			android:id="@+id/split_between">
+    			android:id="@+id/split_between"
+    			android:textSize="10sp">
     </TextView>
     <TextView 	android:layout_toRightOf="@+id/split_between" 
     			android:text="" 
@@ -40,7 +42,8 @@
     			android:gravity="right"
     			android:layout_alignTop="@+id/split_between" 
     			android:layout_alignBottom="@+id/split_between" 
-    			android:id="@+id/date">
+    			android:id="@+id/date"
+    			android:textSize="10sp">
     </TextView>
     <TextView	android:layout_toRightOf="@+id/title"
     			android:text="TextView"
@@ -50,7 +53,7 @@
     			android:layout_alignTop="@+id/title"
     			android:layout_alignBottom="@+id/title" 
     			android:id="@+id/amount"
-    			android:textSize="20sp">
+    			android:textSize="16sp">
     </TextView>
     
 </RelativeLayout>

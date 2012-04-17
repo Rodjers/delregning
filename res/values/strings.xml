@@ -34,4 +34,6 @@
     <string name="no_expenses">Ingen utgifter</string>
     <string name="add_existing_participant">Legg til en eksisterende deltaker</string>
     <string name="send_invitation">Send invitasjon på mail</string>
+    <string name="add_more_participants">Legg til deltakere</string>
+    <string name="delete_expense">Slett utgift</string>
 </resources>
