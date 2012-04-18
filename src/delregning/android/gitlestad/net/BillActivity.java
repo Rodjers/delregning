@@ -51,10 +51,15 @@ public class BillActivity extends ListActivity {
 	private AlertDialog.Builder addParticipantDialogBuilder;
 	private AlertDialog.Builder addExpenseDialogBuilder;
 	private AlertDialog.Builder editExpenseDialogBuilder;
+	private AlertDialog.Builder confirmDialogBuilder;
+	private AlertDialog.Builder editBillDialogBuilder;
 	private static final int NEW_PARTICIPANT_DIALOG = 1;
 	private static final int ADD_PARTICIPANT_DIALOG = 2;
 	private static final int ADD_EXPENSE_DIALOG = 3;
 	private static final int EDIT_EXPENSE_DIALOG = 4;
+	private static final int EDIT_BILL_DIALOG = 5;
+	private static final int CONFIRM_DELETE_EXPENSE_DIALOG = 6;
+	private static final int CONFIRM_DELETE_BILL_DIALOG = 7;	
 	private ArrayList<String> mParticipantsName;
 	private ArrayList<String> mParticipantsId;
 	private String participantId;
@@ -107,14 +112,16 @@ public class BillActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.button_delete:
-			connection.deleteBill(slug);
-			finish();
+			showDialog(CONFIRM_DELETE_BILL_DIALOG);
 			return true;
 		case R.id.button_new_participant:
 			showDialog(NEW_PARTICIPANT_DIALOG);
 			return true;
 		case R.id.button_new_expense:
 			showDialog(ADD_EXPENSE_DIALOG);
+			return true;
+		case R.id.button_edit_bill:
+			showDialog(EDIT_BILL_DIALOG);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -132,8 +139,6 @@ public class BillActivity extends ListActivity {
 			addParticipantDialogBuilder.setTitle(R.string.new_participant);
 			final View newParticipantDialogView = LayoutInflater.from(this).inflate(R.layout.new_participant_dialog, (ViewGroup) findViewById(R.id.new_participant_layout));
 			addParticipantDialogBuilder.setView(newParticipantDialogView);
-			Button addExistingButton = (Button)newParticipantDialogView.findViewById(R.id.button_add_existing);
-			addExistingButton.setOnClickListener(this.addExistingListener);
 			addParticipantDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 						String mName = ((EditText) newParticipantDialogView.findViewById(R.id.edit_name)).getText().toString();
@@ -229,10 +234,7 @@ public class BillActivity extends ListActivity {
 				paidBySpinner.setOnItemSelectedListener(paidBySpinnerListener);
 				Button deleteExpenseButton = new Button(this);
 				deleteExpenseButton.setText(R.string.delete_expense);
-				
-//				LinearLayout.LayoutParams lllp = (LinearLayout.LayoutParams) deleteExpenseButton.getLayoutParams();
-//				lllp.gravity=Gravity.CENTER;
-//				deleteExpenseButton.setLayoutParams(lllp);
+			
 				deleteExpenseButton.setOnClickListener(deleteExpenseListener);
 				JSONArray splitBetweenJSON = currentExpense.getJSONArray("split_between");
 				ArrayList<String> splitBetweenArray = new ArrayList<String>();
@@ -263,7 +265,7 @@ public class BillActivity extends ListActivity {
 							
 				editExpenseDialogBuilder.setView(editExpenseDialogView);
 				
-				editExpenseDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+				editExpenseDialogBuilder.setPositiveButton(R.string.edit, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String description = ((EditText) editExpenseDialogView.findViewById(R.id.edit_description)).getText().toString();
 						String amount = ((EditText) editExpenseDialogView.findViewById(R.id.edit_amount)).getText().toString();
@@ -299,6 +301,91 @@ public class BillActivity extends ListActivity {
 			
 			break;
 			
+		case CONFIRM_DELETE_EXPENSE_DIALOG:
+			
+			confirmDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
+			confirmDialogBuilder.setTitle(R.string.are_you_sure);
+			View confirmDeleteExpenseDialogView = LayoutInflater.from(this).inflate(R.layout.confirm_dialog, (ViewGroup) findViewById(R.id.confirm_dialog_layout));
+			confirmDialogBuilder.setView(confirmDeleteExpenseDialogView);
+			
+			confirmDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					try {
+						connection.removeExpense(slug, new Integer(currentExpense.getInt("id")).toString());
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					presentExpenses(slug);
+					removeDialog(CONFIRM_DELETE_EXPENSE_DIALOG);
+
+				}
+			});	
+			confirmDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					removeDialog(CONFIRM_DELETE_EXPENSE_DIALOG);
+
+				}
+			});	
+			dialog = (Dialog)confirmDialogBuilder.show();
+			break;
+			
+		case CONFIRM_DELETE_BILL_DIALOG:
+			
+			confirmDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
+			confirmDialogBuilder.setTitle(R.string.are_you_sure);
+			View confirmDeleteBillDialogView = LayoutInflater.from(this).inflate(R.layout.confirm_dialog, (ViewGroup) findViewById(R.id.confirm_dialog_layout));
+			confirmDialogBuilder.setView(confirmDeleteBillDialogView);
+			
+			confirmDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {					
+					connection.deleteBill(slug);
+					removeDialog(CONFIRM_DELETE_BILL_DIALOG);
+					finish();
+
+				}
+			});	
+			confirmDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					removeDialog(CONFIRM_DELETE_BILL_DIALOG);
+
+				}
+			});	
+			dialog = (Dialog)confirmDialogBuilder.show();
+			break;
+			
+		case EDIT_BILL_DIALOG:
+			
+			editBillDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
+			editBillDialogBuilder.setTitle(R.string.edit_bill);
+			final View editBillDialogView = LayoutInflater.from(this).inflate(R.layout.edit_bill_dialog, (ViewGroup) findViewById(R.id.edit_bill_layout));
+			editBillDialogBuilder.setView(editBillDialogView);
+			
+			try {
+				EditText title = (EditText)editBillDialogView.findViewById(R.id.edit_title);
+				title.setText(bill.getString("title"));
+			 
+				EditText description = (EditText)editBillDialogView.findViewById(R.id.edit_description);
+				description.setText(bill.getString("description"));
+			
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			editBillDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {					
+					connection.updateBill(slug, ((EditText) editBillDialogView.findViewById(R.id.edit_title)).getText().toString(), ((EditText) editBillDialogView.findViewById(R.id.edit_description)).getText().toString());				
+					removeDialog(EDIT_BILL_DIALOG);
+
+				}
+			});	
+			editBillDialogBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					removeDialog(EDIT_BILL_DIALOG);
+
+				}
+			});	
+			dialog = (Dialog)editBillDialogBuilder.show();
+			break;
+			
 		default:
 			dialog = null;
 			break;
@@ -306,23 +393,12 @@ public class BillActivity extends ListActivity {
 		return dialog;
 	}
 	
-	private OnClickListener addExistingListener = new OnClickListener(){
-		public void onClick(View v){
-			removeDialog(NEW_PARTICIPANT_DIALOG);
-			showDialog(ADD_PARTICIPANT_DIALOG);
-
-		}
-	};
 	private OnClickListener deleteExpenseListener = new OnClickListener(){
 		public void onClick(View v){
-			try {
-				connection.removeExpense(slug, new Integer(currentExpense.getInt("id")).toString());
-			} catch (JSONException e) {
-				e.printStackTrace();
-				removeDialog(EDIT_EXPENSE_DIALOG);
-				presentExpenses(slug);
-			}
-
+			
+			removeDialog(EDIT_EXPENSE_DIALOG);
+			showDialog(CONFIRM_DELETE_EXPENSE_DIALOG);
+			
 		}
 	};
 	

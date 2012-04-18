@@ -82,15 +82,12 @@ public class DelregningConnection {
 		postData(httppost, null);
 	}
 	
-	public JSONObject updateBill(String slug, String title, String description, String notification, String reminder_interval, String background){
+	public JSONObject updateBill(String slug, String title, String description){
 		
-		HttpPost httppost = new HttpPost("https://splitabill.com/bills" + slug + "/settings/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/settings/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("title", title));
 		urldata.add(new BasicNameValuePair("description", description));
-		urldata.add(new BasicNameValuePair("notification", notification)); 
-		urldata.add(new BasicNameValuePair("reminder_interval", reminder_interval)); 
-		urldata.add(new BasicNameValuePair("background", background)); 
 		
 		return postData(httppost, urldata);
 	}
@@ -145,7 +142,7 @@ public class DelregningConnection {
 	
 	public JSONObject removeExpense(String slug, String expense){
 		
-		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expense/" + expense + "/delete/");
+		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expenses/" + expense + "/delete/");
 		
 		return postData(httppost, null);
 	}

@@ -10,6 +10,4 @@
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/edit_name" android:id="@+id/edit_name"></EditText>
     <TextView android:layout_width="wrap_content" android:id="@+id/text_email" android:layout_height="wrap_content" android:text="@string/email"></TextView>
     <EditText android:layout_height="wrap_content" android:layout_width="match_parent" android:text="@string/edit_email" android:id="@+id/edit_email"></EditText>
-    <CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/send_invitation" android:id="@+id/checkbox_send_invitation"></CheckBox>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/button_add_existing" android:text="@string/add_existing_participant"></Button>
 </LinearLayout>
