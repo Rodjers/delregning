@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -20,6 +21,7 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.NameValuePair;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Base64;
@@ -38,22 +40,67 @@ public class DelregningConnection {
 
 	}
 
-	public JSONArray getBills(){
-		try{
+	public boolean authenticate(){
+		
+		boolean result = false;
+		try {
 			HttpGet httpget = new HttpGet("http://splitabill.com/bills/all/");
 			httpget.setHeader("Accept", "application/json");
 			httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
-			HttpResponse response = httpClient.execute(httpget);
+			HttpResponse response;
+
+			response = httpClient.execute(httpget);
+
+			int status = response.getStatusLine().getStatusCode();
+			if (status == 401){
+				result = false;
+			}
+			else {
+				result = true;
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+		
+		
+	}
+	
+	public JSONArray getBills() throws AuthenticationException{
+			
+			HttpGet httpget = new HttpGet("http://splitabill.com/bills/all/");
+			httpget.setHeader("Accept", "application/json");
+			httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
+			HttpResponse response = null;
+			try {
+				response = httpClient.execute(httpget);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			HttpEntity entity = response.getEntity();
-			InputStream stream = entity.getContent();
+			if (response.getStatusLine().getStatusCode() == 401){
+				throw new AuthenticationException();
+			}
+			
+			InputStream stream;
+			try {
+				stream = entity.getContent();
+
 			JSONObject billObject = new JSONObject(convertStreamToString(stream));
 			JSONArray bills = billObject.getJSONArray("bills");
 
 			return bills;
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 		return null;
 	}
 

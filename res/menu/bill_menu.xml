@@ -4,5 +4,5 @@
     <item android:title="@string/delete_bill" android:menuCategory="system" android:visible="true" android:id="@+id/button_delete"></item>
     <item android:title="@string/new_participant" android:menuCategory="system" android:visible="true" android:id="@+id/button_new_participant"></item>   
 	<item android:title="@string/new_expense" android:menuCategory="system" android:visible="true" android:id="@+id/button_new_expense"></item>
-	<item android:id="@+id/button_edit_bill" android:menuCategory="system" android:visible="true" android:title="@string/edit_bill"></item>
+	<item android:title="@string/edit_bill" android:menuCategory="system" android:visible="true" android:id="@+id/button_edit_bill"></item>
 </menu>

@@ -145,14 +145,13 @@ public class BillActivity extends ListActivity {
 						String mEmail = ((EditText) newParticipantDialogView.findViewById(R.id.edit_email)).getText().toString();
 						if(mName != null && mEmail != null){
 							connection.registerParticipant(slug, mName, mEmail);
-							//connection.addParticipant(slug, mParticipants.getInt("id"), ((Checkable) newParticipantDialogView.findViewById(R.id.checkbox_send_invitation)).isChecked());
 						}
-						dismissDialog(ADD_PARTICIPANT_DIALOG);
+						dismissDialog(NEW_PARTICIPANT_DIALOG);
 				}
 			});
 			addParticipantDialogBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					dismissDialog(ADD_PARTICIPANT_DIALOG);
+					dismissDialog(NEW_PARTICIPANT_DIALOG);
 
 				}
 			});	

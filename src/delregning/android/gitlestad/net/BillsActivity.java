@@ -13,6 +13,7 @@ import delregning.android.gitlestad.net.R;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import android.widget.AdapterView;
@@ -36,6 +37,7 @@ public class BillsActivity extends ListActivity {
 	private String password;
 	private DelregningConnection connection;
 	private final static int ADD_BILL_DIALOG = 1;
+	private final static int LOADING = 2;
 	private AlertDialog.Builder addBillDialogBuilder;
 	private JSONArray mBills;
 	private ArrayList<JSONObject> mParticipants;
@@ -43,24 +45,31 @@ public class BillsActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.bill);
 
 		Bundle bundle = getIntent().getExtras();
 		username = bundle.getString("username");
 		password = bundle.getString("password");
-
 		connection = new DelregningConnection(username, password);
-		mBills = connection.getBills();
 
+		try {
+			mBills = new JSONArray(bundle.getString("bills"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+			
+		setContentView(R.layout.bill);
 		presentBills(mBills);
-
 		mParticipants = connection.getParticipants();
 	}
 	
 	@Override
 	public void onResume(){
 		super.onResume();
-		mBills = connection.getBills();
+		try {
+			mBills = connection.getBills();
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+		}
 		presentBills(mBills);
 	}
 	
@@ -87,6 +96,12 @@ public class BillsActivity extends ListActivity {
 
 		Dialog dialog;
 		switch(id){
+		case LOADING:
+			
+			dialog = ProgressDialog.show(BillsActivity.this, "", 
+                    "Loading. Please wait...", true);
+			
+			break;
 		case ADD_BILL_DIALOG:
 			addBillDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
 			addBillDialogBuilder.setTitle(R.string.new_bill);
@@ -97,7 +112,11 @@ public class BillsActivity extends ListActivity {
 				public void onClick(DialogInterface dialog, int whichButton) {	
 					connection.addBill(((EditText) dialogView.findViewById(R.id.edit_title)).getText().toString(),
 									   ((EditText) dialogView.findViewById(R.id.edit_description)).getText().toString());
-					presentBills(connection.getBills());
+					try {
+						presentBills(connection.getBills());
+					} catch (AuthenticationException e) {
+						e.printStackTrace();
+					}
 					dismissDialog(ADD_BILL_DIALOG);
 				}
 			});
