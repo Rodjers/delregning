@@ -56,12 +56,12 @@ public class BillsActivity extends ListActivity {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-			
+
 		setContentView(R.layout.bill);
 		presentBills(mBills);
 		mParticipants = connection.getParticipants();
 	}
-	
+
 	@Override
 	public void onResume(){
 		super.onResume();
@@ -72,14 +72,14 @@ public class BillsActivity extends ListActivity {
 		}
 		presentBills(mBills);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.bills_menu, menu);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -90,17 +90,17 @@ public class BillsActivity extends ListActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(int id){
 
 		Dialog dialog;
 		switch(id){
 		case LOADING:
-			
+
 			dialog = ProgressDialog.show(BillsActivity.this, "", 
-                    "Loading. Please wait...", true);
-			
+					"Loading. Please wait...", true);
+
 			break;
 		case ADD_BILL_DIALOG:
 			addBillDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
@@ -111,7 +111,7 @@ public class BillsActivity extends ListActivity {
 			addBillDialogBuilder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {	
 					connection.addBill(((EditText) dialogView.findViewById(R.id.edit_title)).getText().toString(),
-									   ((EditText) dialogView.findViewById(R.id.edit_description)).getText().toString());
+							((EditText) dialogView.findViewById(R.id.edit_description)).getText().toString());
 					try {
 						presentBills(connection.getBills());
 					} catch (AuthenticationException e) {
@@ -168,20 +168,20 @@ public class BillsActivity extends ListActivity {
 		final ListView lv = getListView();
 		lv.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
-				
+
+
 				if (position == lv.getCount( ) -1){
 					showDialog(ADD_BILL_DIALOG);
 				}
 				else {
-				@SuppressWarnings("unchecked")
-				HashMap<String,String> item = (HashMap<String,String>) lv.getItemAtPosition(position);
-				Intent billIntent = new Intent(BillsActivity.this, BillActivity.class);
-				billIntent.putExtra("slug", item.get("slug"));
-				billIntent.putExtra("username", username);
-				billIntent.putExtra("password", password);
-				billIntent.putExtra("participants", mParticipants);
-				startActivity(billIntent);
+					@SuppressWarnings("unchecked")
+					HashMap<String,String> item = (HashMap<String,String>) lv.getItemAtPosition(position);
+					Intent billIntent = new Intent(BillsActivity.this, BillActivity.class);
+					billIntent.putExtra("slug", item.get("slug"));
+					billIntent.putExtra("username", username);
+					billIntent.putExtra("password", password);
+					billIntent.putExtra("participants", mParticipants);
+					startActivity(billIntent);
 				}
 			}
 		});

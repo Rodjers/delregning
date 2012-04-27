@@ -41,7 +41,7 @@ public class DelregningConnection {
 	}
 
 	public boolean authenticate(){
-		
+
 		boolean result = false;
 		try {
 			HttpGet httpget = new HttpGet("http://splitabill.com/bills/all/");
@@ -64,43 +64,43 @@ public class DelregningConnection {
 			e.printStackTrace();
 		}
 		return result;
-		
-		
+
+
 	}
-	
+
 	public JSONArray getBills() throws AuthenticationException{
-			
-			HttpGet httpget = new HttpGet("http://splitabill.com/bills/all/");
-			httpget.setHeader("Accept", "application/json");
-			httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
-			HttpResponse response = null;
-			try {
-				response = httpClient.execute(httpget);
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			HttpEntity entity = response.getEntity();
-			if (response.getStatusLine().getStatusCode() == 401){
-				throw new AuthenticationException();
-			}
-			
-			InputStream stream;
-			try {
-				stream = entity.getContent();
+
+		HttpGet httpget = new HttpGet("http://splitabill.com/bills/all/");
+		httpget.setHeader("Accept", "application/json");
+		httpget.setHeader("Authorization", "Basic "+Base64.encodeToString((username + ":" + password).getBytes(),2));
+		HttpResponse response = null;
+		try {
+			response = httpClient.execute(httpget);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+		if (response.getStatusLine().getStatusCode() == 401){
+			throw new AuthenticationException();
+		}
+
+		InputStream stream;
+		try {
+			stream = entity.getContent();
 
 			JSONObject billObject = new JSONObject(convertStreamToString(stream));
 			JSONArray bills = billObject.getJSONArray("bills");
 
 			return bills;
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -125,108 +125,108 @@ public class DelregningConnection {
 
 	public void deleteBill(String slug){
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/delete/");
-		
+
 		postData(httppost, null);
 	}
-	
+
 	public JSONObject updateBill(String slug, String title, String description){
-		
+
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/settings/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("title", title));
 		urldata.add(new BasicNameValuePair("description", description));
-		
+
 		return postData(httppost, urldata);
 	}
-	
+
 	public JSONObject registerParticipant(String slug, String name, String email){
-		
+
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/participants/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("name", name));
 		urldata.add(new BasicNameValuePair("email", email));
 		urldata.add(new BasicNameValuePair("payment_info", ""));
 		urldata.add(new BasicNameValuePair("new", "1"));
-		
+
 		return postData(httppost, urldata);
 	}
-	
+
 	public JSONObject addParticipant(String slug, int participant, boolean send_invitation){
-		
+
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/participants/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("participant", Integer.toString(participant)));
 		urldata.add(new BasicNameValuePair("existing", "1"));
 		urldata.add(new BasicNameValuePair("send_invitation", Boolean.toString(send_invitation))); 
-		
+
 		return postData(httppost, urldata);
 	}
-	
+
 	public JSONObject removeParticipant(String slug, int participant){
-		
+
 		HttpPost httppost = new HttpPost("http://splitabill.com/bills/" + slug + "/participants/" + Integer.toString(participant) + "/remove/");
-				
+
 		return postData(httppost, null);
 	}
-	
+
 	public JSONObject addExpense(String slug, String description, String amount, String paid_by, ArrayList<String> split_between){
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expenses/add/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);
 		urldata.add(new BasicNameValuePair("description", description));
 		urldata.add(new BasicNameValuePair("amount", amount));  
 		urldata.add(new BasicNameValuePair("paid_by", paid_by));
-		
+
 		if (split_between != null){
 			Iterator<String> it = split_between.iterator();
-			
+
 			while(it.hasNext()){
 				urldata.add(new BasicNameValuePair("split_between", it.next()));
 			}
 		}
-		
+
 		return postData(httppost, urldata);
 	}
-	
+
 	public JSONObject removeExpense(String slug, String expense){
-		
+
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expenses/" + expense + "/delete/");
-		
+
 		return postData(httppost, null);
 	}
-	
-public JSONObject updateExpense(String slug, String expense, String description, String amount, String paid_by, ArrayList<String> split_between){
-		
+
+	public JSONObject updateExpense(String slug, String expense, String description, String amount, String paid_by, ArrayList<String> split_between){
+
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/expenses/" + expense + "/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);
 		urldata.add(new BasicNameValuePair("description", description));
 		urldata.add(new BasicNameValuePair("amount", amount));  
 		urldata.add(new BasicNameValuePair("paid_by", paid_by));
-		
+
 		if (split_between != null){
 			Iterator<String> it = split_between.iterator();
-			
+
 			while(it.hasNext()){
 				urldata.add(new BasicNameValuePair("split_between", it.next()));
 			}
 		}
-		
+
 		return postData(httppost, urldata);
 	}
-	
+
 	public JSONObject addPayment(String slug, String amount, String paid_by, String paid_to){
-		
+
 		HttpPost httppost = new HttpPost("http://splitabill.com/bills/create/");
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("amount", amount));  
 		urldata.add(new BasicNameValuePair("paid_by", paid_by));
 		urldata.add(new BasicNameValuePair("paid_by", paid_to));
-		
+
 		return postData(httppost, urldata);
 	}
-	
+
 	public JSONObject removePayment(String slug, int payment_id){
 		HttpPost httppost = new HttpPost("https://splitabill.com/bills/" + slug + "/payments/" + payment_id + "/remove/");
-		
+
 		return postData(httppost, null);
 	}
 
@@ -236,13 +236,13 @@ public JSONObject updateExpense(String slug, String expense, String description,
 		List<NameValuePair> urldata = new ArrayList<NameValuePair>(2);  
 		urldata.add(new BasicNameValuePair("title", title));  
 		urldata.add(new BasicNameValuePair("description", description));
-		
+
 		return postData(httppost, urldata);
 	}
-	
+
 	public ArrayList<JSONObject> getParticipants(){
 		ArrayList<JSONObject> participants = new ArrayList<JSONObject>();
-		
+
 		try{
 			HttpGet httpget = new HttpGet("https://splitabill.com/bills/participants/");
 			httpget.setHeader("Accept", "application/json");
@@ -264,12 +264,12 @@ public JSONObject updateExpense(String slug, String expense, String description,
 		return participants;
 
 	}
-	
+
 	public ArrayList<JSONObject> getParticipantsOfBill(String slug){
 		ArrayList<JSONObject> participants = new ArrayList<JSONObject>();
-		
+
 		try{
-			
+
 			JSONObject participantsObject = getBill(slug);
 			JSONObject mJSONObject = participantsObject.getJSONObject("bill");
 			JSONArray participantsArray = mJSONObject.getJSONArray("participants");
@@ -285,7 +285,7 @@ public JSONObject updateExpense(String slug, String expense, String description,
 		return participants;
 
 	}
-		
+
 	private JSONObject postData(HttpPost httpPost, List<NameValuePair> urlData){
 
 		HttpProtocolParams.setUseExpectContinue(httpClient.getParams(), false);
@@ -293,7 +293,7 @@ public JSONObject updateExpense(String slug, String expense, String description,
 
 		try {
 			if (urlData != null){
-			httpPost.setEntity(new UrlEncodedFormEntity(urlData, "UTF-8"));
+				httpPost.setEntity(new UrlEncodedFormEntity(urlData, "UTF-8"));
 			}
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
@@ -313,7 +313,7 @@ public JSONObject updateExpense(String slug, String expense, String description,
 		catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return bill;
 	}
 

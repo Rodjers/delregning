@@ -43,21 +43,21 @@ public class LoginActivity extends Activity {
 		login_button.setOnClickListener(loginListener);
 
 	}
-	
+
 	protected Dialog onCreateDialog(int id){
 		Dialog dialog = null;
-		
+
 		switch(id){
-		
+
 		case LOADING:
-			
+
 			dialog = ProgressDialog.show(LoginActivity.this, "", 
-                    "Loading. Please wait...", true);
-			
+					"Loading. Please wait...", true);
+
 			break;
-			
+
 		case AUTHENTICATION_ERROR_DIALOG:
-			
+
 			authenticationErrorDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.dialogTheme));
 			authenticationErrorDialogBuilder.setTitle(R.string.authentication_error);
 			View authenticationErrorDialogView = LayoutInflater.from(this).inflate(R.layout.authentication_error_dialog, (ViewGroup) findViewById(R.id.authentication_error_dialog_layout));
@@ -71,7 +71,7 @@ public class LoginActivity extends Activity {
 			dialog = (Dialog)authenticationErrorDialogBuilder.show();
 			break;
 		}
-		
+
 		return dialog;
 	}
 
@@ -82,7 +82,7 @@ public class LoginActivity extends Activity {
 			EditText editPassword = (EditText)findViewById(R.id.password);
 
 			showDialog(LOADING);
-			
+
 			username = editUsername.getText().toString();
 			password = editPassword.getText().toString();
 			connection = new DelregningConnection(username, password);
