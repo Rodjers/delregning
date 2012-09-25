@@ -103,7 +103,7 @@ public class BillsActivity extends ListActivity {
 
 			break;
 		case ADD_BILL_DIALOG:
-			addBillDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
+		addBillDialogBuilder = new AlertDialog.Builder(new ContextThemeWrapper(this,R.style.dialogTheme));
 			addBillDialogBuilder.setTitle(R.string.new_bill);
 			final View dialogView = LayoutInflater.from(this).inflate(R.layout.add_bill_dialog, (ViewGroup) findViewById(R.id.add_bill_dialog_id));
 			addBillDialogBuilder.setInverseBackgroundForced(false);

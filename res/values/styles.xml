@@ -11,5 +11,5 @@
 			<item name="android:background">#00000000</item>
 			<item name="android:fitsSystemWindows">true</item>
 			<item name="android:windowNoTitle">true</item>
-		</style>	
+		</style>
 	</resources>
