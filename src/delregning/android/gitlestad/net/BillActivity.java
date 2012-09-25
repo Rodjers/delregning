@@ -174,6 +174,7 @@ public class BillActivity extends ListActivity {
 			paidBySpinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mParticipantsName);
 			paidBySpinner.setAdapter(paidBySpinnerAdapter);
 			paidBySpinner.setOnItemSelectedListener(paidBySpinnerListener);
+			paidBySpinner.getContext().setTheme(R.style.dialogTheme);
 
 			final TableLayout addExpenseParticipantsTable = (TableLayout)addExpenseDialogView.findViewById(R.id.table_split_between);
 			for (int i = 0; i < mParticipantsName.size(); i++){
@@ -231,6 +232,7 @@ public class BillActivity extends ListActivity {
 				paidBySpinner.setAdapter(paidBySpinnerAdapter);
 				paidBySpinner.setSelection(mParticipantsName.indexOf(((JSONObject)currentExpense.get("paid_by")).getString("name")));
 				paidBySpinner.setOnItemSelectedListener(paidBySpinnerListener);
+				paidBySpinner.getContext().setTheme(R.style.dialogTheme);
 				Button deleteExpenseButton = new Button(this);
 				deleteExpenseButton.setText(R.string.delete_expense);
 

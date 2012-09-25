@@ -44,13 +44,13 @@ public final class R {
         public static final int new_participant_layout=0x7f07001f;
         public static final int new_payment_layout=0x7f070024;
         public static final int paid_by=0x7f07000b;
-        public static final int password=0x7f07001d;
+        public static final int password=0x7f07001c;
         public static final int spinner_paid_by=0x7f070015;
         public static final int spinner_paid_to=0x7f070027;
         public static final int split_between=0x7f07000c;
         public static final int table_split_between=0x7f070017;
         public static final int textView1=0x7f07001a;
-        public static final int textView2=0x7f07001c;
+        public static final int textView2=0x7f07001d;
         public static final int text_amount=0x7f070012;
         public static final int text_description=0x7f070011;
         public static final int text_email=0x7f070022;

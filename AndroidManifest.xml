@@ -8,7 +8,7 @@
     <application 
     	android:icon="@drawable/icon" 
     	android:label="@string/app_name"
-   		android:theme="@style/defaultTheme">
+    	android:theme="@style/defaultTheme">
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -14,12 +14,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.view.View.OnClickListener;
 
 
@@ -33,6 +35,7 @@ public class LoginActivity extends Activity {
 	private final static int AUTHENTICATION_ERROR_DIALOG = 2;
 	private AlertDialog.Builder authenticationErrorDialogBuilder;
 	private DelregningConnection connection;
+	private ProgressDialog loadingDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,19 @@ public class LoginActivity extends Activity {
 
 		login_button = (Button)findViewById(R.id.login_button);
 		login_button.setOnClickListener(loginListener);
+		EditText editUsername = (EditText)findViewById(R.id.username);
+		EditText editPassword = (EditText)findViewById(R.id.password);
+		
+		editUsername.setOnEditorActionListener(editLoginListener);
+		editPassword.setOnEditorActionListener(editLoginListener);
 
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		loadingDialog.dismiss();
+		
 	}
 
 	protected Dialog onCreateDialog(int id){
@@ -53,6 +68,7 @@ public class LoginActivity extends Activity {
 
 			dialog = ProgressDialog.show(LoginActivity.this, "", 
 					"Loading. Please wait...", true);
+			
 
 			break;
 
@@ -77,35 +93,45 @@ public class LoginActivity extends Activity {
 
 	private OnClickListener loginListener = new OnClickListener(){
 		public void onClick(View v){
-
-			EditText editUsername = (EditText)findViewById(R.id.username);
-			EditText editPassword = (EditText)findViewById(R.id.password);
-
-			showDialog(LOADING);
-
-			username = editUsername.getText().toString();
-			password = editPassword.getText().toString();
-			connection = new DelregningConnection(username, password);
-			try {
-				bills = connection.getBills();
-				Intent billsIntent = new Intent(LoginActivity.this, BillsActivity.class);
-				billsIntent.putExtra("username", username);
-				billsIntent.putExtra("password", password);
-				billsIntent.putExtra("bills", bills.toString());
-				dismissDialog(LOADING);
-				startActivity(billsIntent);
-			} catch (AuthenticationException e) {
-				dismissDialog(LOADING);
-				showDialog(AUTHENTICATION_ERROR_DIALOG);
-			}
-
-
-
-
+			loadingDialog = new ProgressDialog(LoginActivity.this);
+			loadingDialog.getContext().setTheme(R.style.dialogTheme);
+			loadingDialog.setMessage("Loading...");
+			loadingDialog.show();
+			login();
 		}
 	};
+	
+	private TextView.OnEditorActionListener editLoginListener = new TextView.OnEditorActionListener(){
 
+		public boolean onEditorAction(TextView arg0, int arg1, KeyEvent arg2) {
+			login();
+			return false;
+		}
+		
+	};
+	
+	private void login(){
+		
+		EditText editUsername = (EditText)findViewById(R.id.username);
+		EditText editPassword = (EditText)findViewById(R.id.password);
 
+		//showDialog(LOADING);
+		
 
-
+		username = editUsername.getText().toString();
+		password = editPassword.getText().toString();
+		connection = new DelregningConnection(username, password);
+		try {
+			bills = connection.getBills();
+			Intent billsIntent = new Intent(LoginActivity.this, BillsActivity.class);
+			billsIntent.putExtra("username", username);
+			billsIntent.putExtra("password", password);
+			billsIntent.putExtra("bills", bills.toString());
+//			dismissDialog(LOADING);
+			startActivity(billsIntent);
+		} catch (AuthenticationException e) {
+	//		dismissDialog(LOADING);
+			showDialog(AUTHENTICATION_ERROR_DIALOG);
+		}
+	}
 }
