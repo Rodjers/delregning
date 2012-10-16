@@ -175,12 +175,31 @@ public class BillsActivity extends ListActivity {
 				}
 				else {
 					@SuppressWarnings("unchecked")
+					
+					ProgressDialog loadingDialog = new ProgressDialog(BillsActivity.this);
+					loadingDialog.getContext().setTheme(R.style.dialogTheme);
+					loadingDialog.setMessage(getString(R.string.please_wait));
+					loadingDialog.setTitle(R.string.logging_in);
+					loadingDialog.show();
+					
 					HashMap<String,String> item = (HashMap<String,String>) lv.getItemAtPosition(position);
 					Intent billIntent = new Intent(BillsActivity.this, BillActivity.class);
 					billIntent.putExtra("slug", item.get("slug"));
 					billIntent.putExtra("username", username);
 					billIntent.putExtra("password", password);
 					billIntent.putExtra("participants", mParticipants);
+					JSONObject tBill = connection.getBill(item.get("slug"));
+					JSONObject bill;
+					try {
+						bill = tBill.getJSONObject("bill");
+					
+					final JSONArray expenses = bill.getJSONArray("expenses");
+					billIntent.putExtra("expenses", expenses.toString());
+					} catch (JSONException e) {
+						loadingDialog.dismiss();
+						e.printStackTrace();
+					}
+					loadingDialog.dismiss();
 					startActivity(billIntent);
 				}
 			}

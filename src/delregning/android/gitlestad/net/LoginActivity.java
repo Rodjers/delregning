@@ -49,13 +49,14 @@ public class LoginActivity extends Activity {
 		
 		editUsername.setOnEditorActionListener(editLoginListener);
 		editPassword.setOnEditorActionListener(editLoginListener);
+		
 
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		loadingDialog.dismiss();
+		//loadingDialog.dismiss();
 		
 	}
 
@@ -93,10 +94,8 @@ public class LoginActivity extends Activity {
 
 	private OnClickListener loginListener = new OnClickListener(){
 		public void onClick(View v){
-			loadingDialog = new ProgressDialog(LoginActivity.this);
-			loadingDialog.getContext().setTheme(R.style.dialogTheme);
-			loadingDialog.setMessage("Loading...");
-			loadingDialog.show();
+			
+			
 			login();
 		}
 	};
@@ -112,11 +111,15 @@ public class LoginActivity extends Activity {
 	
 	private void login(){
 		
+		
+		loadingDialog = new ProgressDialog(LoginActivity.this);
+		loadingDialog.getContext().setTheme(R.style.dialogTheme);
+		loadingDialog.setMessage(getString(R.string.please_wait));
+		loadingDialog.setTitle(R.string.logging_in);
+		loadingDialog.show();
+		//ProgressDialog.show(LoginActivity.this, "Loging in", "Please Wait...").getContext().setTheme(R.style.dialogTheme);
 		EditText editUsername = (EditText)findViewById(R.id.username);
 		EditText editPassword = (EditText)findViewById(R.id.password);
-
-		//showDialog(LOADING);
-		
 
 		username = editUsername.getText().toString();
 		password = editPassword.getText().toString();
@@ -127,10 +130,10 @@ public class LoginActivity extends Activity {
 			billsIntent.putExtra("username", username);
 			billsIntent.putExtra("password", password);
 			billsIntent.putExtra("bills", bills.toString());
-//			dismissDialog(LOADING);
+			loadingDialog.dismiss();
 			startActivity(billsIntent);
 		} catch (AuthenticationException e) {
-	//		dismissDialog(LOADING);
+			loadingDialog.dismiss();
 			showDialog(AUTHENTICATION_ERROR_DIALOG);
 		}
 	}

@@ -64,6 +64,7 @@ public class BillActivity extends ListActivity {
 	private ArrayList<String> mParticipantsId;
 	private String participantId;
 	private JSONObject currentExpense;
+	private JSONArray mExpenses;
 
 
 
@@ -78,6 +79,12 @@ public class BillActivity extends ListActivity {
 		username = bundle.getString("username");
 		password = bundle.getString("password");
 		slug = bundle.getString("slug");
+		try {
+			mExpenses = new JSONArray(bundle.getString("expenses"));
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
 		mParticipantsName = new ArrayList<String>();
 		mParticipantsId = new ArrayList<String>();
 
@@ -95,7 +102,8 @@ public class BillActivity extends ListActivity {
 				e.printStackTrace();
 			}
 		}
-		presentExpenses(slug);
+			presentExpenses(mExpenses);
+		
 
 
 
@@ -203,7 +211,11 @@ public class BillActivity extends ListActivity {
 
 					connection.addExpense(slug, description, amount, participantId, splitBetween);
 					dismissDialog(ADD_EXPENSE_DIALOG);
-					presentExpenses(slug);
+					try {
+						presentExpenses(getExpenses(slug));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 
 				}
 			});
@@ -285,7 +297,11 @@ public class BillActivity extends ListActivity {
 							e.printStackTrace();
 						}
 						removeDialog(EDIT_EXPENSE_DIALOG);
-						presentExpenses(slug);
+						try {
+							presentExpenses(getExpenses(slug));
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
 
 					}
 				});
@@ -316,7 +332,12 @@ public class BillActivity extends ListActivity {
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
-					presentExpenses(slug);
+					
+					try {
+						presentExpenses(getExpenses(slug));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 					removeDialog(CONFIRM_DELETE_EXPENSE_DIALOG);
 
 				}
@@ -418,13 +439,19 @@ public class BillActivity extends ListActivity {
 
 	};
 
+	private JSONArray getExpenses(String slug) throws JSONException{
+		
+		JSONObject tBill = connection.getBill(slug);
+		bill = tBill.getJSONObject("bill");
+		final JSONArray expenses = bill.getJSONArray("expenses");
+		
+		return expenses;
+	}
 
-
-	private void presentExpenses(String tSlug){
+	private void presentExpenses(JSONArray pExpenses){
+		
+		final JSONArray expenses = pExpenses;
 		try{
-			JSONObject tBill = connection.getBill(slug);
-			bill = tBill.getJSONObject("bill");
-			final JSONArray expenses = bill.getJSONArray("expenses");
 			ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String,String>>();
 
 			for (int i = 0; i < expenses.length(); i++){
