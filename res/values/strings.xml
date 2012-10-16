@@ -44,4 +44,6 @@
     <string name="edit_bill">Endre på regning</string>
     <string name="edit">Endre</string>
     <string name="authentication_error">Feil brukernavn og/eller passord</string>
+    <string name="logging_in">Logger inn</string>
+    <string name="please_wait">Vennligst vent...</string>
 </resources>
