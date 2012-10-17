@@ -18,8 +18,7 @@
         <activity android:name=".BillsActivity"/>
         <activity android:name=".BillActivity"/>      
         <activity android:name=".AddBillActivity"/>
-        <activity android:name="com.google.ads.AdActivity"
-              android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        <activity android:name="com.google.ads.AdActivity"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
