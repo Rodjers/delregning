@@ -36,4 +36,8 @@
     			android:text="@string/button_login" 
     			android:layout_width="wrap_content" 
     			android:id="@+id/login_button"/>
+    			
+    <include layout="@layout/ad_footer" android:id="@+id/adLinearLayout"  android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    			
+    			
 </LinearLayout>
