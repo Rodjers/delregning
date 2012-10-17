@@ -18,8 +18,14 @@
         <activity android:name=".BillsActivity"/>
         <activity android:name=".BillActivity"/>      
         <activity android:name=".AddBillActivity"/>
+        <activity android:name="com.google.ads.AdActivity"/>
     </application>
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.INTERNET">
     </uses-permission>
+=======
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+>>>>>>> development
     <uses-sdk android:minSdkVersion="8"/>
 </manifest>
