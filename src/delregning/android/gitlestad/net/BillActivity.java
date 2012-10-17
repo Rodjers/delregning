@@ -511,8 +511,6 @@ public class BillActivity extends ListActivity {
 
 				}
 			});
-
-
 			setListAdapter(new SimpleAdapter(
 					this, 
 					list,
