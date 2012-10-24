@@ -2,3 +2,4 @@
 *.class
 *.dex
 bin/
+bin/*
