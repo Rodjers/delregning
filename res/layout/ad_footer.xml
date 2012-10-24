@@ -10,6 +10,6 @@
                          android:layout_height="wrap_content"
                          ads:adUnitId="a1507f0e766a0ab"
                          ads:adSize="BANNER"
-                         ads:testDevices="TEST_EMULATOR, TEST_DEVICE_ID"
-                         ads:loadAdOnCreate="true" android:gravity="bottom|top"/>
+                         ads:testDevices="TEST_EMULATOR"
+                         ads:loadAdOnCreate="true" android:gravity="bottom"/>
 </LinearLayout>

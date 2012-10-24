@@ -18,9 +18,11 @@
         <activity android:name=".BillsActivity"/>
         <activity android:name=".BillActivity"/>      
         <activity android:name=".AddBillActivity"/>
-        <activity android:name="com.google.ads.AdActivity"/>
+        <activity android:name="com.google.ads.AdActivity"
+        android:configChanges="keyboardHidden|keyboard|orientation|screenLayout|uiMode"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-sdk android:minSdkVersion="8"/>
+    <uses-sdk android:minSdkVersion="3"
+        		android:targetSdkVersion="8"/>
 </manifest>
