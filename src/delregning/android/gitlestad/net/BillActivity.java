@@ -499,6 +499,17 @@ public class BillActivity extends ListActivity {
 
 					if (position == lv.getCount( ) -1){
 						showDialog(ADD_EXPENSE_DIALOG);
+<<<<<<< HEAD
+					}
+					else {
+						try {
+							currentExpense = expenses.getJSONObject(position);
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}				
+						showDialog(EDIT_EXPENSE_DIALOG);
+					}
+=======
 					}
 					else {
 						try {
@@ -512,7 +523,10 @@ public class BillActivity extends ListActivity {
 				}
 			});
 
+>>>>>>> development
 
+				}
+			});
 			setListAdapter(new SimpleAdapter(
 					this, 
 					list,
