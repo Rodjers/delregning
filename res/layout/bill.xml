@@ -9,7 +9,9 @@
 	    android:id="@android:id/list"
 	    android:layout_width="fill_parent"
 	    android:layout_height="0px"
-	    android:layout_weight="1" >
+	    android:layout_weight="1"
+    	android:paddingLeft="4dp"
+    	android:paddingRight="4dp" >
 	
 	</ListView>
 	<include layout="@layout/ad_footer" android:id="@+id/linearLayout1_ref2"  android:layout_width="match_parent" android:layout_height="wrap_content"/>

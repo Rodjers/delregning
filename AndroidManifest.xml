@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="delregning.android.gitlestad.net"
       android:versionCode="1"
-      android:versionName="1.0">
+      android:versionName="1.0.0">
 
 
     <application 
@@ -21,17 +21,8 @@
         <activity android:name="com.google.ads.AdActivity"
         android:configChanges="keyboardHidden|keyboard|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
     </application>
-<<<<<<< HEAD
-    <uses-permission android:name="android.permission.INTERNET">
-    </uses-permission>
-=======
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-<<<<<<< HEAD
     <uses-sdk android:minSdkVersion="3"
-        		android:targetSdkVersion="1"/>
-=======
->>>>>>> development
-    <uses-sdk android:minSdkVersion="8"/>
->>>>>>> master
+        		android:targetSdkVersion="20"/>
 </manifest>

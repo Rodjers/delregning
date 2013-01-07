@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Delregning</string>
+    <string name="username">Brukernavn:</string>
+    
+    <string name="button_login">Logg Inn</string>
+    <string name="button_bills">Vis Regninger</string>
+    <string name="delete_bill">Slett Regning</string>
+    <string name="add_bill">Legg til regning</string>
+    <string name="password">Passord:</string>
+    <string name="edit_username"></string>
+    <string name="edit_password"></string>
+    <string name="title">Tittel:</string>
+    <string name="description">Beskrivelse:</string>
+    <string name="edit_title"></string>
+    <string name="edit_description"></string>
+    <string name="edit_name"></string>
+    <string name="edit_email"></string>
+    <string name="name">Navn:</string>
+    <string name="email">Epost:</string>
+    <string name="add">Legg til</string>
+    <string name="cancel">Avbryt</string>
+    <string name="new_bill">Ny Regning</string>
+    <string name="new_participant">Ny Deltaker</string>
+    <string name="new_payment">Ny Betaling</string>
+    <string name="split_between">Delt mellom: </string>
+    <string name="paid_by">Betalt av: </string>
+    <string name="paid_to">Betalt til: </string>
+    <string name="amount">Beløp: </string>
+    <string name="click_add_bill">Klikk for å legge til en ny regning</string>
+    <string name="new_expense">Ny utgift</string>
+    <string name="add_expense">Legg til utgift</string>
+    <string name="click_new_expense">Klikk for å legge til ny utgift</string>
+    <string name="no_expenses">Ingen utgifter</string>
+    <string name="add_existing_participant">Legg til en eksisterende deltaker</string>
+    <string name="send_invitation">Send invitasjon på mail</string>
+    <string name="add_more_participants">Legg til deltakere</string>
+    <string name="delete_expense">Slett utgift</string>
+    <string name="are_you_sure">Er du sikker?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nei</string>
+    <string name="ok">Ok</string>
+    <string name="warning">Advarsel</string>
+    <string name="edit_bill">Endre på regning</string>
+    <string name="edit">Endre</string>
+    <string name="authentication_error">Feil brukernavn og/eller passord</string>
+    <string name="logging_in">Logger inn</string>
+    <string name="please_wait">Vennligst vent...</string>
+</resources>

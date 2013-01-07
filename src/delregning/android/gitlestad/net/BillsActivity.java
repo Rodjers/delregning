@@ -167,6 +167,7 @@ public class BillsActivity extends ListActivity {
 				new int[] {android.R.id.text1, android.R.id.text2}));
 		final ListView lv = getListView();
 		lv.setOnItemClickListener(new OnItemClickListener() {
+			@SuppressWarnings("unchecked")
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 
@@ -174,7 +175,6 @@ public class BillsActivity extends ListActivity {
 					showDialog(ADD_BILL_DIALOG);
 				}
 				else {
-					@SuppressWarnings("unchecked")
 					
 					ProgressDialog loadingDialog = new ProgressDialog(BillsActivity.this);
 					loadingDialog.getContext().setTheme(R.style.dialogTheme);
